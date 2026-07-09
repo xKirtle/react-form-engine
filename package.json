@@ -14,13 +14,17 @@
     "lint:fix": "biome check --write .",
     "changeset": "changeset",
     "demo": "pnpm --filter demo dev",
-    "publint": "pnpm -r --filter './packages/*' exec publint"
+    "publint": "pnpm -r --filter './packages/*' exec publint",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.3",
     "@changesets/cli": "^2.31.0",
     "publint": "^0.3.21",
     "tsup": "^8.5.1",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitepress": "^1.6.4"
   }
 }
