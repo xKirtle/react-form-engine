@@ -13,6 +13,7 @@
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "changeset": "changeset",
+    "demo": "pnpm --filter demo dev",
     "publint": "pnpm -r --filter './packages/*' exec publint"
   },
   "devDependencies": {

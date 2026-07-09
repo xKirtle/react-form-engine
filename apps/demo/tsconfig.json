@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "paths": {
+      "@react-form-engine/core": ["../../packages/core/src/index.ts"],
+      "@react-form-engine/renderers-html": [
+        "../../packages/renderers-html/src/index.ts"
+      ]
+    }
+  },
+  "include": ["src", "vite.config.ts"]
+}
