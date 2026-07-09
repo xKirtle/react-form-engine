@@ -5,6 +5,13 @@ export type {
   FieldMap,
   Transform,
 } from "./types/fields";
+export type {
+  ApiDefaults,
+  FieldOverride,
+  FormModule,
+  ModuleFactory,
+  ModuleInput,
+} from "./types/modules";
 export type { DeepKeys, DeepValue } from "./types/paths";
 export type {
   FieldConfigOf,
