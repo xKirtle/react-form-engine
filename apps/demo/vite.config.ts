@@ -9,6 +9,8 @@ const source = (path: string) =>
 // aliased to source, so editing packages/* hot-reloads here. Array form:
 // entries match in order, so subpaths must precede their package name.
 export default defineConfig({
+  // the Pages workflow deploys under /react-form-engine/demo/
+  base: process.env.DEMO_BASE ?? "/",
   plugins: [react()],
   resolve: {
     alias: [
