@@ -1,0 +1,13 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "plugin": ["typedoc-plugin-markdown", "typedoc-vitepress-theme"],
+  "entryPointStrategy": "packages",
+  "entryPoints": ["packages/core", "packages/renderers-html"],
+  "out": "docs/api",
+  "docsRoot": "docs",
+  "readme": "none",
+  "cleanOutputDir": true,
+  "includeVersion": false,
+  "excludePrivate": true,
+  "excludeInternal": true
+}

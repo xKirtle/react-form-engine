@@ -6,6 +6,7 @@ export type {
   FormProps,
 } from "./react/Form";
 export { Form } from "./react/Form";
+export type { AnyFormBundle } from "./react/FormContext";
 export { FormRenderers, useRenderers } from "./react/FormRenderers";
 export type { TypedFormComponents } from "./react/typed";
 export { formComponentsFor } from "./react/typed";
@@ -17,13 +18,23 @@ export { useFormEngine } from "./react/useFormEngine";
 export { useFormValue } from "./react/useFormValue";
 export type { ListFieldItem, ListFieldState } from "./react/useListField";
 export { useListField } from "./react/useListField";
+export type {
+  FormEngineInternals,
+  OptionsStore,
+  ServerErrorsStore,
+  VisibilityStore,
+} from "./runtime/engine";
 export type { FieldTypeRuntime } from "./runtime/fieldTypes";
 export { englishMessages, mergeMessages } from "./runtime/messages";
+export type { ResolvedSchema } from "./runtime/resolver";
+export type { FieldValidationResult } from "./runtime/validate";
+export type { ValidationController } from "./runtime/validationState";
 export type { FormEngineApi } from "./types/engine";
 export type {
   FieldDefinition,
   FieldDefinitionFor,
   FieldMap,
+  HiddenFieldPolicy,
   Transform,
 } from "./types/fields";
 export type {
