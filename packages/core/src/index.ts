@@ -29,3 +29,4 @@ export type {
   NumberValidation,
   StringValidation,
 } from "./types/validation";
+export type { FormValueOf, FormValuesOf } from "./types/values";
