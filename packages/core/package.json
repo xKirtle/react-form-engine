@@ -1,6 +1,6 @@
 {
   "name": "@react-form-engine/core",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Data-driven form engine for React: typed field schemas, composable modules, rules, and headless rendering on top of TanStack Form.",
   "license": "MIT",
   "author": "Rodrigo Martins",
