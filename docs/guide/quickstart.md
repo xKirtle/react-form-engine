@@ -3,12 +3,6 @@
 A working form in four steps: define fields as data, compose them into a
 module, hand everything to the engine, render.
 
-::: warning Not published yet
-The packages are under active development and not yet on npm. This page
-shows the intended install flow; until the first release, the way to try
-the library is the [live demo](https://xkirtle.github.io/react-form-engine/demo/).
-:::
-
 ## Install
 
 ```sh

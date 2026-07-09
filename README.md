@@ -1,6 +1,7 @@
 # react-form-engine
 
 [![CI](https://github.com/xKirtle/react-form-engine/actions/workflows/ci.yml/badge.svg)](https://github.com/xKirtle/react-form-engine/actions/workflows/ci.yml)
+[![npm](https://img.shields.io/npm/v/%40react-form-engine%2Fcore?label=%40react-form-engine%2Fcore)](https://www.npmjs.com/package/@react-form-engine/core)
 
 Data-driven forms for React: schemas for vocabulary, code for logic.
 
@@ -10,7 +11,11 @@ with headless, pluggable rendering.
 
 **[Documentation](https://xkirtle.github.io/react-form-engine/)** ·
 **[Live demo](https://xkirtle.github.io/react-form-engine/demo/)** with an
-inspectable engine-state readout · first npm release coming as `0.1.0`
+inspectable engine-state readout
+
+```sh
+npm install @react-form-engine/core @react-form-engine/renderers-html
+```
 
 ## Why another form library?
 
