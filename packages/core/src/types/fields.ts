@@ -107,9 +107,37 @@ export type FieldDefinition<TApi> = {
  * definition's `key` is the API path it binds to. They often coincide, but
  * a nested or unwieldy path can sit behind a friendlier name.
  *
+ * Write maps with `as const satisfies` — `satisfies` checks every binding
+ * against the API model while `as const` preserves the literal types that
+ * inference builds on.
+ *
+ * @example
  * ```ts
+ * interface Project {
+ *   name: string;
+ *   startedAt: Date;
+ *   settings: { visibility: "private" | "public" };
+ * }
+ *
  * const fields = {
+ *   name: {
+ *     key: "name",
+ *     type: "text",
+ *     label: "Project name",
+ *     validation: { required: true, maxLength: { value: 40 } },
+ *   },
+ *   // a nested path behind a friendlier name
  *   visibility: { key: "settings.visibility", type: "select" },
+ *   // Date does not fit the date type's ISO-string domain,
+ *   // so the compiler requires this transform:
+ *   startedAt: {
+ *     key: "startedAt",
+ *     type: "date",
+ *     transform: {
+ *       parse: (d) => d.toISOString().slice(0, 10),
+ *       serialize: (iso) => new Date(iso),
+ *     },
+ *   },
  * } as const satisfies FieldMap<Project>;
  * ```
  *

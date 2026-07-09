@@ -37,6 +37,45 @@ export interface ListFieldState<TItem> {
  * any list field; for string lists, `useListField<string>(name)`.
  * Must render inside `<Form>`.
  *
+ * Each item exposes its {@link ListRow} identity plus mechanics; `canAdd`
+ * is false while any row is incomplete, so add buttons naturally prevent
+ * stacking blanks.
+ *
+ * @example
+ * ```tsx
+ * function RolesList() {
+ *   const list = useListField<{ key: string; value: string }>("memberRoles");
+ *   return (
+ *     <div>
+ *       {list.items.map((item) => (
+ *         <div key={item.id}>
+ *           <input
+ *             value={item.value.key}
+ *             readOnly={item.meta.keyReadOnly === true}
+ *             onChange={(e) => item.update({ ...item.value, key: e.target.value })}
+ *             onBlur={() => item.markCellTouched("key")}
+ *           />
+ *           <button
+ *             type="button"
+ *             onClick={item.remove}
+ *             disabled={item.meta.pinned === true}
+ *           >
+ *             Remove
+ *           </button>
+ *         </div>
+ *       ))}
+ *       <button
+ *         type="button"
+ *         disabled={!list.canAdd}
+ *         onClick={() => list.add({ key: "", value: "" })}
+ *       >
+ *         Add
+ *       </button>
+ *     </div>
+ *   );
+ * }
+ * ```
+ *
  * @group Hooks
  */
 export function useListField<TItem = unknown>(

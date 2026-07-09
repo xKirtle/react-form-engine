@@ -62,11 +62,27 @@ function boundFormBuilder<
 
 /**
  * The single inference anchor: bind the API model once, then the field
- * map, and everything downstream — rules, modules, factories — infers.
+ * map, and everything downstream — rules, modules, factories — infers
+ * with no annotations.
  *
+ * @example
  * ```ts
  * const b = formBuilder<Project>().withFields(projectFields);
+ *
+ * // context-free: serves any form over these fields
+ * const requireBudgetWhenFunded = b.rule({
+ *   watch: ["kind"],
+ *   when: (kind) => kind === "funded", // kind is typed from the map
+ *   apply: (form) => form.setVisible("budget", true),
+ *   otherwise: (form) => form.setVisible("budget", false),
+ * });
+ *
+ * // context-aware: rules and factories made here see ProjectFormCtx
  * const bc = b.withContext<ProjectFormCtx>();
+ * const basics = bc.module({
+ *   fields: ["name", "kind", "budget"],
+ *   rules: [requireBudgetWhenFunded],
+ * });
  * ```
  *
  * @group Builder

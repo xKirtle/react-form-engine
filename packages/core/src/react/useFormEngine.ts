@@ -79,6 +79,33 @@ export interface UseFormEngineReturn<
  * place — display state (touched, submitted, server errors) survives.
  * Only `reset()` clears it.
  *
+ * Render the bundle with {@link Form} inside {@link FormRenderers}.
+ *
+ * @example
+ * ```tsx
+ * function ProjectForm(props: { initial?: Partial<Project> }) {
+ *   const bundle = useFormEngine<Project, undefined, typeof fields>({
+ *     fields,
+ *     modules: [{ fields: ["name", "kind", "launchDate"] }],
+ *     context: undefined,
+ *     initialValues: props.initial,
+ *     initialErrors: props.initial ? "eager" : "gated",
+ *     onSubmit: async (project) => saveProject(project),
+ *   });
+ *
+ *   return (
+ *     <FormRenderers renderers={htmlRenderers}>
+ *       <Form form={bundle}>
+ *         <Form.AutoFields />
+ *       </Form>
+ *       <button type="button" onClick={() => void bundle.handleSubmit()}>
+ *         Save
+ *       </button>
+ *     </FormRenderers>
+ *   );
+ * }
+ * ```
+ *
  * @group Hooks
  */
 export function useFormEngine<TApi, TContext, TFields extends FieldMap<TApi>>(

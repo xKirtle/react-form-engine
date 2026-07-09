@@ -25,6 +25,26 @@ export type WatchedValues<
  * context — or none — serves any form whose context extends it, so form
  * variants share one rule set.
  *
+ * Create rules through {@link BoundFormBuilder.rule} so the watch tuple
+ * and callback parameters infer from the field map.
+ *
+ * @example
+ * ```ts
+ * const seedOwner = bc.rule({
+ *   watch: ["kind"],
+ *   when: (kind) => kind === "delegated",
+ *   apply: (form, ctx) => {
+ *     form.ensureRows("memberRoles", [{
+ *       match: { key: "owner" },
+ *       value: { key: "owner", value: ctx.defaultOwner },
+ *       meta: { pinned: true },
+ *     }]);
+ *   },
+ *   // runs once, on the transition to false
+ *   otherwise: (form) => form.removeRows("memberRoles", { origin: "seeded" }),
+ * });
+ * ```
+ *
  * @group Rules
  */
 export interface Rule<
