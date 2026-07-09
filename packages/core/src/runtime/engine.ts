@@ -62,6 +62,7 @@ export interface FormEngineInternals<
   engine: FormEngineApi<TApi, TFields>;
   ruleScope: FormEngineApi<TApi, TFields>;
   schema: ResolvedSchema<TApi, TContext, TFields>;
+  fieldTypes: Record<string, FieldTypeRuntime> | undefined;
   visibility: VisibilityStore;
   options: OptionsStore;
   serverErrors: ServerErrorsStore;
@@ -272,6 +273,7 @@ export function createEngine<TApi, TContext, TFields extends FieldMap<TApi>>(
     engine,
     ruleScope,
     schema,
+    fieldTypes,
     visibility: {
       isVisible: (name) => !hidden.has(name),
       hiddenNames: () => hidden,
