@@ -1,6 +1,6 @@
 {
   "name": "@react-form-engine/renderers-html",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Accessible field renderers for @react-form-engine/core built on native HTML elements.",
   "license": "MIT",
   "author": "Rodrigo Martins",
