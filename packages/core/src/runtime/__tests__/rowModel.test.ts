@@ -7,6 +7,7 @@ import {
   isCompleteItemDefault,
   removeRowsById,
   removeRowsByOrigin,
+  stampKnownRows,
   updateRowValue,
 } from "../rowModel";
 
@@ -168,6 +169,33 @@ describe("removeRowsByOrigin — seeded release", () => {
     });
     const withoutUser = removeRowsByOrigin(state, "user");
     expect(withoutUser.rows).toHaveLength(2);
+  });
+});
+
+describe("stampKnownRows", () => {
+  it("stamps meta on the first matching row, creates nothing", () => {
+    const state = stampKnownRows(createRowsState(entries, "api"), [
+      { match: { key: "env" }, meta: { pinned: true } },
+      { match: { key: "missing" }, meta: { pinned: true } },
+    ]);
+    expect(state.rows).toHaveLength(2);
+    expect(state.rows[0]?.meta.pinned).toBe(true);
+    expect(state.rows[1]?.meta.pinned).toBeUndefined();
+  });
+
+  it("is permanent — releasing seeded rows does not strip it", () => {
+    let state = stampKnownRows(createRowsState(entries, "api"), [
+      { match: { key: "env" }, meta: { pinned: true } },
+    ]);
+    state = removeRowsByOrigin(state, "seeded");
+    expect(state.rows[0]?.meta.pinned).toBe(true);
+  });
+
+  it("is a same-reference no-op when nothing matches", () => {
+    const state = createRowsState(entries, "api");
+    expect(
+      stampKnownRows(state, [{ match: { key: "missing" }, meta: {} }]),
+    ).toBe(state);
   });
 });
 

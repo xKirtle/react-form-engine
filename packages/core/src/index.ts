@@ -26,6 +26,7 @@ export type {
   SelectItem,
 } from "./types/registry";
 export type {
+  KnownRowSpec,
   ListRow,
   RowListKeys,
   RowMeta,

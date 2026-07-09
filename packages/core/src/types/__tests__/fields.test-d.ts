@@ -145,6 +145,35 @@ describe("definition slots follow the declared type", () => {
   });
 });
 
+describe("knownRows", () => {
+  test("typed against the post-parse item on object-item lists", () => {
+    accepts<FieldDefinition<Project>>({
+      key: "tags",
+      type: "keyValueList",
+      transform: {
+        parse: (api) => api.map((s) => ({ key: s, value: "" })),
+        serialize: (entries) => entries.map((e) => e.key),
+      },
+      knownRows: [{ match: { key: "env" }, meta: { pinned: true } }],
+    });
+  });
+
+  test("rejected on scalar and string-list fields", () => {
+    // @ts-expect-error — knownRows requires an object-item list
+    accepts<FieldDefinition<Project>>({
+      key: "name",
+      type: "text",
+      knownRows: [{ match: {}, meta: {} }],
+    });
+    // @ts-expect-error — string lists have no columns to match on
+    accepts<FieldDefinition<Project>>({
+      key: "tags",
+      type: "stringList",
+      knownRows: [{ match: {}, meta: {} }],
+    });
+  });
+});
+
 describe("keys are validated paths", () => {
   test("unknown keys are rejected", () => {
     // @ts-expect-error — not a path into Project

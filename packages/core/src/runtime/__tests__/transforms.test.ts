@@ -98,6 +98,30 @@ describe("parse", () => {
   it("does not mutate the input", () => {
     expect(apiValues.currency).toBeUndefined();
   });
+
+  it("stamps knownRows meta onto matching parsed rows", () => {
+    const knownSchema = resolveModules<Project, undefined, typeof fields>({
+      fields,
+      modules: [
+        {
+          fields: ["labels"],
+          overrides: {
+            labels: {
+              knownRows: [{ match: { key: "env" }, meta: { pinned: true } }],
+            },
+          },
+        },
+      ],
+      context: undefined,
+    });
+    const p = parseApiValues({
+      schema: knownSchema,
+      apiValues: { labels: ["env", "other"] },
+    });
+    const rows = p.formValues.labels as ListRow<unknown>[];
+    expect(rows[0]?.meta.pinned).toBe(true);
+    expect(rows[1]?.meta.pinned).toBeUndefined();
+  });
 });
 
 describe("serialize", () => {

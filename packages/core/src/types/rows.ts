@@ -49,6 +49,18 @@ export interface RowSeedSpec<TItem> {
 }
 
 /**
+ * A parse-time stamping instruction, declared as `knownRows` on an
+ * object-item list field: if an incoming API row matches, the meta is
+ * merged onto it. Adopt-only — nothing is created when no row matches —
+ * and permanent: unlike rule seeding this is not a lease, so releasing
+ * seeded rows never strips it.
+ */
+export interface KnownRowSpec<TItem> {
+  match: Partial<TItem>;
+  meta: RowMeta;
+}
+
+/**
  * The field names whose form value is a row list with object items — the
  * keys `ensureRows`/`removeRows` accept. String lists have row identity
  * too, but no columns to seed or lock, so they are excluded from seeding.

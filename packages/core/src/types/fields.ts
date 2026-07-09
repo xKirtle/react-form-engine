@@ -5,6 +5,7 @@ import type {
   FieldValidationOf,
   FieldValueOf,
 } from "./registry";
+import type { KnownRowSpec } from "./rows";
 
 /**
  * Converts one field's value between the API model and the form model.
@@ -41,11 +42,21 @@ type ValueSlots<TApiValue, TDomain> = [NonNullable<TApiValue>] extends [TDomain]
   ? {
       transform?: Transform<TApiValue, NonNullable<TApiValue>>;
       defaultValue?: NonNullable<TApiValue>;
-    }
+    } & KnownRowsSlot<NonNullable<TApiValue>>
   : {
       transform: Transform<TApiValue, TDomain>;
       defaultValue?: TDomain;
-    };
+    } & KnownRowsSlot<TDomain>;
+
+/**
+ * `knownRows` exists only on object-item list fields, typed against the
+ * form-model item (post-parse — the specs match what parsing produced).
+ */
+type KnownRowsSlot<TFormValue> = TFormValue extends readonly (infer TItem)[]
+  ? TItem extends object
+    ? { knownRows?: readonly KnownRowSpec<TItem>[] }
+    : { knownRows?: undefined }
+  : { knownRows?: undefined };
 
 /**
  * What a hidden field contributes at serialize: `"omit"` drops the key,

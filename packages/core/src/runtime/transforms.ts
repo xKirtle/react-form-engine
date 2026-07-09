@@ -1,11 +1,12 @@
 import type { FieldMap, HiddenFieldPolicy, Transform } from "../types/fields";
-import type { ListRow } from "../types/rows";
+import type { KnownRowSpec, ListRow } from "../types/rows";
 import { builtinFieldTypeRuntimes, type FieldTypeRuntime } from "./fieldTypes";
 import type { ResolvedSchema } from "./resolver";
 import {
   createRowsState,
   isBlankItemDefault,
   type RowsState,
+  stampKnownRows,
 } from "./rowModel";
 
 /**
@@ -33,6 +34,7 @@ interface AnyFieldDefinition {
   defaultValue?: unknown;
   transform?: Transform<unknown, unknown>;
   whenHidden?: HiddenFieldPolicy;
+  knownRows?: readonly KnownRowSpec<unknown>[];
 }
 
 /**
@@ -69,7 +71,10 @@ export function parseApiValues<
     const value = parseFieldValue(definition, passthrough, runtime);
     if (runtime.list !== undefined) {
       const items = Array.isArray(value) ? value : [];
-      const state = createRowsState(items, "api");
+      let state = createRowsState(items, "api");
+      if (definition.knownRows !== undefined) {
+        state = stampKnownRows(state, definition.knownRows);
+      }
       rowStates.set(name, state);
       formValues[name] = state.rows;
     } else {

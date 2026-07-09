@@ -1,4 +1,10 @@
-import type { ListRow, RowMeta, RowOrigin, RowSeedSpec } from "../types/rows";
+import type {
+  KnownRowSpec,
+  ListRow,
+  RowMeta,
+  RowOrigin,
+  RowSeedSpec,
+} from "../types/rows";
 
 /**
  * One list field's rows plus the engine's seeding bookkeeping. All
@@ -108,6 +114,38 @@ export function ensureRows<TItem>(
   return changed ? { rows, seeds, stamped } : state;
 }
 
+/**
+ * Parse-time stamping: merges each spec's meta onto the first unclaimed
+ * matching row. Adopt-only (nothing is created) and permanent — no seeding
+ * bookkeeping is recorded, so releasing seeded rows never strips these.
+ */
+export function stampKnownRows<TItem>(
+  state: RowsState<TItem>,
+  specs: readonly KnownRowSpec<TItem>[],
+): RowsState<TItem> {
+  let rows = state.rows;
+  const claimed = new Set<string>();
+  let changed = false;
+
+  for (const spec of specs) {
+    const target = rows.find(
+      (row) => !claimed.has(row.id) && matchesPartial(row.value, spec.match),
+    );
+    if (target === undefined) {
+      continue;
+    }
+    claimed.add(target.id);
+    if (Object.keys(spec.meta).length > 0) {
+      rows = rows.map((row) =>
+        row === target ? { ...row, meta: { ...row.meta, ...spec.meta } } : row,
+      );
+      changed = true;
+    }
+  }
+
+  return changed ? { ...state, rows } : state;
+}
+
 export function removeRowsById<TItem>(
   state: RowsState<TItem>,
   ids: readonly string[],
@@ -190,11 +228,15 @@ function signatureOf(spec: RowSeedSpec<unknown>): string {
 
 function matchesSpec<TItem>(value: TItem, spec: RowSeedSpec<TItem>): boolean {
   if (spec.match !== undefined) {
-    return Object.entries(spec.match).every(([key, expected]) =>
-      Object.is((value as Record<string, unknown>)[key], expected),
-    );
+    return matchesPartial(value, spec.match);
   }
   return shallowEquals(value, spec.value);
+}
+
+function matchesPartial<TItem>(value: TItem, match: Partial<TItem>): boolean {
+  return Object.entries(match).every(([key, expected]) =>
+    Object.is((value as Record<string, unknown>)[key], expected),
+  );
 }
 
 function shallowEquals(a: unknown, b: unknown): boolean {
