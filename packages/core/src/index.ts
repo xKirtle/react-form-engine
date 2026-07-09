@@ -1,3 +1,5 @@
+export type { BoundFormBuilder, FormBuilder } from "./builder";
+export { formBuilder } from "./builder";
 export type { FormEngineApi } from "./types/engine";
 export type {
   FieldDefinition,
