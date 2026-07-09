@@ -47,6 +47,12 @@ type ValueSlots<TApiValue, TDomain> = [NonNullable<TApiValue>] extends [TDomain]
       defaultValue?: TDomain;
     };
 
+/**
+ * What a hidden field contributes at serialize: `"omit"` drops the key,
+ * `"null"` sends an explicit null, `"keep"` serializes the current value.
+ */
+export type HiddenFieldPolicy = "omit" | "null" | "keep";
+
 /** A field definition for one specific key and field type. */
 export type FieldDefinitionFor<
   TApi,
@@ -58,6 +64,7 @@ export type FieldDefinitionFor<
   label?: string;
   description?: string;
   validation?: FieldValidationOf<T>;
+  whenHidden?: HiddenFieldPolicy;
 } & ConfigSlot<T> &
   ValueSlots<DeepValue<TApi, K>, FieldValueOf<T>>;
 
