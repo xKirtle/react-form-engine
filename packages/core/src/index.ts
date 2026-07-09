@@ -1,5 +1,12 @@
 export type { BoundFormBuilder, FormBuilder } from "./builder";
 export { formBuilder } from "./builder";
+export type {
+  UseFormEngineOptions,
+  UseFormEngineReturn,
+} from "./react/useFormEngine";
+export { useFormEngine } from "./react/useFormEngine";
+export type { FieldTypeRuntime } from "./runtime/fieldTypes";
+export { englishMessages, mergeMessages } from "./runtime/messages";
 export type { FormEngineApi } from "./types/engine";
 export type {
   FieldDefinition,
@@ -8,6 +15,11 @@ export type {
   Transform,
 } from "./types/fields";
 export type {
+  EngineMessages,
+  EngineMessagesOverride,
+  ValidationMessages,
+} from "./types/messages";
+export type {
   ApiDefaults,
   FieldOverride,
   FormModule,
@@ -15,6 +27,7 @@ export type {
   ModuleInput,
 } from "./types/modules";
 export type { DeepKeys, DeepValue } from "./types/paths";
+export type { FieldPresentation } from "./types/presentation";
 export type {
   FieldConfigOf,
   FieldTypeName,

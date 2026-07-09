@@ -38,7 +38,7 @@ function setup(
   const internals = createEngine({ schema, apiValues });
   const runner = createRuleRunner({
     internals,
-    context: { defaultOwner: "alice" },
+    getContext: () => ({ defaultOwner: "alice" }),
   });
   return { internals, runner };
 }

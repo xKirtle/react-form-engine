@@ -14,7 +14,11 @@ import {
   removeRowsByOrigin,
   updateRowValue,
 } from "./rowModel";
-import { parseApiValues, serializeFormValues } from "./transforms";
+import {
+  parseApiValues,
+  parseFieldEntry,
+  serializeFormValues,
+} from "./transforms";
 
 /**
  * Writes come in two channels. User-channel writes dirty the form and stamp
@@ -72,6 +76,13 @@ export interface FormEngineInternals<
   };
   isDirty(): boolean;
   serialize(): Record<string, unknown>;
+  /**
+   * Swaps the resolved schema after a re-resolution (context change).
+   * Fields new to the schema parse in from the passthrough on the derived
+   * channel (never dirtying); removed fields keep their store values but
+   * stop serializing and validating.
+   */
+  updateSchema(schema: ResolvedSchema<TApi, TContext, TFields>): void;
   /** Activates the underlying form; returns its cleanup. */
   mount(): () => void;
 }
@@ -96,7 +107,8 @@ function createNotifier() {
 export function createEngine<TApi, TContext, TFields extends FieldMap<TApi>>(
   options: EngineOptions<TApi, TContext, TFields>,
 ): FormEngineInternals<TApi, TContext, TFields> {
-  const { schema, fieldTypes } = options;
+  const { fieldTypes } = options;
+  let schema = options.schema;
 
   let parsed = parseApiValues({
     schema,
@@ -272,8 +284,28 @@ export function createEngine<TApi, TContext, TFields extends FieldMap<TApi>>(
     form,
     engine,
     ruleScope,
-    schema,
+    get schema() {
+      return schema;
+    },
     fieldTypes,
+    updateSchema(next) {
+      schema = next;
+      for (const [name, definition] of next.fields) {
+        if (form.getFieldValue(name as never) !== undefined) {
+          continue;
+        }
+        const parsedField = parseFieldEntry(
+          definition as { key: string; type: string },
+          parsed.passthrough,
+          fieldTypes,
+        );
+        if (parsedField.rows !== undefined) {
+          rowStates = new Map(rowStates);
+          rowStates.set(name, parsedField.rows);
+        }
+        write(name, parsedField.value, "derived");
+      }
+    },
     visibility: {
       isVisible: (name) => !hidden.has(name),
       hiddenNames: () => hidden,

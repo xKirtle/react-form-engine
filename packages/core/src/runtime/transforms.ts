@@ -66,27 +66,44 @@ export function parseApiValues<
   const rowStates = new Map<string, RowsState<unknown>>();
 
   for (const [name, resolved] of schema.fields) {
-    const definition = resolved as AnyFieldDefinition;
-    const runtime = runtimeOf(definition, options.fieldTypes);
-    const value = parseFieldValue(definition, passthrough, runtime);
-    if (runtime.list !== undefined) {
-      const items = Array.isArray(value) ? value : [];
-      let state = createRowsState(items, "api");
-      if (definition.knownRows !== undefined) {
-        state = stampKnownRows(state, definition.knownRows);
-      }
-      rowStates.set(name, state);
-      formValues[name] = state.rows;
-    } else {
-      formValues[name] = value;
+    const parsedField = parseFieldEntry(
+      resolved as AnyFieldDefinition,
+      passthrough,
+      options.fieldTypes,
+    );
+    if (parsedField.rows !== undefined) {
+      rowStates.set(name, parsedField.rows);
     }
+    formValues[name] = parsedField.value;
   }
 
   return { formValues, rowStates, passthrough };
 }
 
+/**
+ * Parses one field from the passthrough. Internal — the engine uses it to
+ * parse fields that join the schema after a re-resolution.
+ */
+export function parseFieldEntry(
+  definition: { key: string; type: string } & Partial<AnyFieldDefinition>,
+  passthrough: Record<string, unknown>,
+  fieldTypes: Record<string, FieldTypeRuntime> | undefined,
+): { value: unknown; rows?: RowsState<unknown> } {
+  const runtime = runtimeOf(definition, fieldTypes);
+  const value = parseFieldValue(definition, passthrough, runtime);
+  if (runtime.list !== undefined) {
+    const items = Array.isArray(value) ? value : [];
+    let state = createRowsState(items, "api");
+    if (definition.knownRows !== undefined) {
+      state = stampKnownRows(state, definition.knownRows);
+    }
+    return { value: state.rows, rows: state };
+  }
+  return { value };
+}
+
 function parseFieldValue(
-  definition: AnyFieldDefinition,
+  definition: { key: string } & Partial<AnyFieldDefinition>,
   passthrough: Record<string, unknown>,
   runtime: FieldTypeRuntime,
 ): unknown {

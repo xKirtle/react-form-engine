@@ -13,6 +13,8 @@ export interface RuleRunner {
   start(): () => void;
   /** Clears rule memory and re-runs the initial pass (after a reset). */
   restart(): void;
+  /** Evaluates now — e.g. after a schema update added rules. */
+  run(): void;
 }
 
 /**
@@ -33,10 +35,10 @@ export function createRuleRunner<
   TFields extends FieldMap<TApi>,
 >(options: {
   internals: FormEngineInternals<TApi, TContext, TFields>;
-  context: TContext;
+  /** Read per evaluation, so a re-resolved form's context stays current. */
+  getContext: () => TContext;
 }): RuleRunner {
-  const { internals, context } = options;
-  const rules = internals.schema.rules;
+  const { internals, getContext } = options;
 
   type StoredRule = AnyRule<TApi, TContext, TFields>;
   const lastSeen = new Map<StoredRule, readonly unknown[]>();
@@ -62,7 +64,8 @@ export function createRuleRunner<
           );
         }
         fired = false;
-        for (const rule of rules) {
+        // read live: a schema update may have changed the rule list
+        for (const rule of internals.schema.rules) {
           if (evaluateRule(rule)) {
             fired = true;
           }
@@ -93,13 +96,13 @@ export function createRuleRunner<
 
     if (condition) {
       if (rule.apply !== undefined) {
-        rule.apply(internals.ruleScope, context);
+        rule.apply(internals.ruleScope, getContext());
         return true;
       }
       return false;
     }
     if (previous !== false && rule.otherwise !== undefined) {
-      rule.otherwise(internals.ruleScope, context);
+      rule.otherwise(internals.ruleScope, getContext());
       return true;
     }
     return false;
@@ -116,7 +119,7 @@ export function createRuleRunner<
     evaluate();
   }
 
-  return { start, restart };
+  return { start, restart, run: evaluate };
 }
 
 function sameTuple(a: readonly unknown[], b: readonly unknown[]): boolean {
