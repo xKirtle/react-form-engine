@@ -48,5 +48,9 @@
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "vitest": "^4.1.10"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
   }
 }

@@ -18,7 +18,8 @@
     "docs:dev": "typedoc && vitepress dev docs",
     "docs:build": "typedoc && vitepress build docs",
     "docs:preview": "vitepress preview docs",
-    "docs:api": "typedoc"
+    "docs:api": "typedoc",
+    "release": "pnpm build && changeset publish"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.3",
