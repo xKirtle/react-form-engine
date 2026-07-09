@@ -1,6 +1,13 @@
 export type { BoundFormBuilder, FormBuilder } from "./builder";
 export { formBuilder } from "./builder";
 export type {
+  AutoFieldsProps,
+  FieldProps,
+  FormProps,
+} from "./react/Form";
+export { Form } from "./react/Form";
+export { FormRenderers, useRenderers } from "./react/FormRenderers";
+export type {
   UseFormEngineOptions,
   UseFormEngineReturn,
 } from "./react/useFormEngine";
@@ -38,6 +45,12 @@ export type {
   KeyValueEntry,
   SelectItem,
 } from "./types/registry";
+export type {
+  FieldRenderer,
+  FieldRenderProps,
+  RenderedFieldDefinition,
+  RendererMap,
+} from "./types/renderers";
 export type {
   KnownRowSpec,
   ListRow,

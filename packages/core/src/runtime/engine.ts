@@ -74,6 +74,11 @@ export interface FormEngineInternals<
     add(name: keyof TFields & string, item: unknown): void;
     update(name: keyof TFields & string, id: string, item: unknown): void;
   };
+  /** Bumps on every updateSchema — what schema-order consumers watch. */
+  schemaVersion: {
+    current(): number;
+    subscribe(listener: () => void): () => void;
+  };
   isDirty(): boolean;
   serialize(): Record<string, unknown>;
   /**
@@ -132,6 +137,8 @@ export function createEngine<TApi, TContext, TFields extends FieldMap<TApi>>(
   const visibilityNotifier = createNotifier();
   const optionsNotifier = createNotifier();
   const errorsNotifier = createNotifier();
+  let schemaVersion = 0;
+  const schemaNotifier = createNotifier();
 
   function assertField(name: string): void {
     if (!schema.fields.has(name as keyof TFields & string)) {
@@ -290,6 +297,7 @@ export function createEngine<TApi, TContext, TFields extends FieldMap<TApi>>(
     fieldTypes,
     updateSchema(next) {
       schema = next;
+      schemaVersion += 1;
       for (const [name, definition] of next.fields) {
         if (form.getFieldValue(name as never) !== undefined) {
           continue;
@@ -305,6 +313,11 @@ export function createEngine<TApi, TContext, TFields extends FieldMap<TApi>>(
         }
         write(name, parsedField.value, "derived");
       }
+      schemaNotifier.notify();
+    },
+    schemaVersion: {
+      current: () => schemaVersion,
+      subscribe: schemaNotifier.subscribe,
     },
     visibility: {
       isVisible: (name) => !hidden.has(name),
