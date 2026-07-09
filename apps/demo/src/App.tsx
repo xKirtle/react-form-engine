@@ -5,8 +5,8 @@ import {
   formBuilder,
   useFormEngine,
 } from "@react-form-engine/core";
+import { htmlRenderers } from "@react-form-engine/renderers-html";
 import { useState } from "react";
-import { scratchRenderers } from "./renderers";
 
 interface Project {
   name: string;
@@ -117,7 +117,7 @@ export function App() {
         {bundle.isDirty ? " ● unsaved changes" : ""}
       </p>
 
-      <FormRenderers renderers={scratchRenderers}>
+      <FormRenderers renderers={htmlRenderers}>
         <Form form={bundle}>
           <Form.AutoFields />
         </Form>

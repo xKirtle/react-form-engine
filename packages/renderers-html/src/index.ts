@@ -1,4 +1,5 @@
 import type { RendererMap } from "@react-form-engine/core";
+import { KeyValueListRenderer, StringListRenderer } from "./listRenderers";
 import {
   CheckboxRenderer,
   DateRenderer,
@@ -12,19 +13,20 @@ export { FieldFrame } from "./FieldFrame";
 export {
   CheckboxRenderer,
   DateRenderer,
+  KeyValueListRenderer,
   NumberRenderer,
   SelectRenderer,
+  StringListRenderer,
   TextRenderer,
 };
 
-/**
- * Renderers for the built-in scalar field types, on native HTML elements.
- * List renderers join the map next.
- */
+/** Renderers for every built-in field type, on native HTML elements. */
 export const htmlRenderers: RendererMap = {
   text: TextRenderer,
   number: NumberRenderer,
   date: DateRenderer,
   checkbox: CheckboxRenderer,
   select: SelectRenderer,
+  stringList: StringListRenderer,
+  keyValueList: KeyValueListRenderer,
 };

@@ -15,6 +15,14 @@ export const englishMessages: EngineMessages = {
     maxItems: (max) =>
       max === 1 ? "Keep at most 1 item" : `Keep at most ${max} items`,
   },
+  lists: {
+    add: "Add item",
+    remove: (rowName) => `Remove ${rowName}`,
+    rowName: (position, key) =>
+      key === undefined ? `row ${position}` : `row ${position} (${key})`,
+    keyCell: "Key",
+    valueCell: "Value",
+  },
 };
 
 /**
@@ -27,10 +35,14 @@ export function mergeMessages(
   ...overrides: readonly (EngineMessagesOverride | undefined)[]
 ): EngineMessages {
   let validation = base.validation;
+  let lists = base.lists;
   for (const override of overrides) {
     if (override?.validation !== undefined) {
       validation = { ...validation, ...override.validation };
     }
+    if (override?.lists !== undefined) {
+      lists = { ...lists, ...override.lists };
+    }
   }
-  return { validation };
+  return { validation, lists };
 }

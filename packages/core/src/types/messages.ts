@@ -17,15 +17,29 @@ export interface ValidationMessages {
 }
 
 /**
- * All engine-generated strings. Grows with the engine (list mechanics,
- * boolean labels) — every generated string routes through here, so a locale
- * override can reach all of them.
+ * List-mechanics strings, used by list renderers for visible labels and
+ * accessible names. `rowName` builds the per-row identifier that remove
+ * buttons and cell labels embed — "row 2 (owner)".
+ */
+export interface ListMessages {
+  add: string;
+  remove: (rowName: string) => string;
+  rowName: (position: number, key: string | undefined) => string;
+  keyCell: string;
+  valueCell: string;
+}
+
+/**
+ * All engine-generated strings. Every generated string routes through
+ * here, so a locale override can reach all of them.
  */
 export interface EngineMessages {
   validation: ValidationMessages;
+  lists: ListMessages;
 }
 
 /** A partial override, mergeable over the defaults section by section. */
 export interface EngineMessagesOverride {
   validation?: Partial<ValidationMessages>;
+  lists?: Partial<ListMessages>;
 }
