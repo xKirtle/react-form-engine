@@ -26,6 +26,10 @@ export interface ValidationController<
   subscribe(listener: () => void): () => void;
   /** Raw validity, ignoring display gating. */
   isValid(): boolean;
+  /** Whether this field's display gate has been opened by touch. */
+  isTouched(name: string): boolean;
+  /** Whether a submit attempt has opened every gate. */
+  isSubmitted(): boolean;
   markTouched(name: string): void;
   markCellTouched(name: string, rowId: string, column: string): void;
   markSubmitted(): void;
@@ -231,6 +235,14 @@ export function createValidationController<
 
     isValid() {
       return isValidResult(results);
+    },
+
+    isTouched(name) {
+      return touched.has(name);
+    },
+
+    isSubmitted() {
+      return submitted;
     },
 
     markTouched(name) {

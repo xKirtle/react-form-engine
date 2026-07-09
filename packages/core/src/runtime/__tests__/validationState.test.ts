@@ -136,6 +136,22 @@ describe("presentation snapshots", () => {
 });
 
 describe("validity and lifecycle", () => {
+  it("exposes the touch and submit gates for inspection", () => {
+    const { internals, controller } = setup({}, "gated");
+    expect(controller.isTouched("name")).toBe(false);
+    expect(controller.isSubmitted()).toBe(false);
+
+    controller.markTouched("name");
+    controller.markSubmitted();
+    expect(controller.isTouched("name")).toBe(true);
+    expect(controller.isSubmitted()).toBe(true);
+
+    internals.engine.reset();
+    controller.reset();
+    expect(controller.isTouched("name")).toBe(false);
+    expect(controller.isSubmitted()).toBe(false);
+  });
+
   it("isValid reports raw validity regardless of gating", () => {
     const { internals, controller } = setup({}, "gated");
     expect(controller.isValid()).toBe(false);

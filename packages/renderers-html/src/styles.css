@@ -1,0 +1,155 @@
+/**
+ * Optional styling for @react-form-engine/renderers-html.
+ *
+ * Opt in with:  import "@react-form-engine/renderers-html/styles.css";
+ *
+ * Theme by setting the custom properties at any scope:
+ *   --rfe-color-error, --rfe-color-border, --rfe-color-muted,
+ *   --rfe-color-focus, --rfe-radius, --rfe-space, --rfe-font-size-small
+ */
+
+.rfe-field {
+  display: block;
+  margin-block-end: var(--rfe-space, 0.75rem);
+}
+
+.rfe-field__label {
+  display: block;
+  font-weight: 600;
+  margin-block-end: 0.25em;
+}
+
+.rfe-field__description {
+  display: block;
+  color: var(--rfe-color-muted, #5f5f5f);
+  font-size: var(--rfe-font-size-small, 0.8125rem);
+  margin-block-end: 0.25em;
+}
+
+.rfe-field__error {
+  display: block;
+  color: var(--rfe-color-error, #b3261e);
+  font-size: var(--rfe-font-size-small, 0.8125rem);
+  /* the live region is always present; reserve its line so an error
+     appearing never shifts the layout */
+  min-height: 1.25em;
+  margin-block-start: 0.25em;
+}
+
+.rfe-field__required {
+  color: var(--rfe-color-error, #b3261e);
+}
+
+.rfe-input,
+.rfe-select,
+.rfe-list__remove,
+.rfe-list__add {
+  box-sizing: border-box;
+}
+
+.rfe-input,
+.rfe-select {
+  font: inherit;
+  padding: 0.375em 0.5em;
+  border: 1px solid var(--rfe-color-border, #767676);
+  border-radius: var(--rfe-radius, 4px);
+  background: #fff;
+  inline-size: 100%;
+  max-inline-size: var(--rfe-control-max-width, 26rem);
+}
+
+.rfe-input:focus-visible,
+.rfe-select:focus-visible,
+.rfe-checkbox:focus-visible,
+.rfe-list__remove:focus-visible,
+.rfe-list__add:focus-visible {
+  outline: 2px solid var(--rfe-color-focus, #1a56b0);
+  outline-offset: 1px;
+}
+
+.rfe-input[aria-invalid="true"],
+.rfe-select[aria-invalid="true"] {
+  border-color: var(--rfe-color-error, #b3261e);
+}
+
+.rfe-input[readonly] {
+  background: var(--rfe-readonly-bg, #f3f3f3);
+  color: var(--rfe-color-muted, #5f5f5f);
+}
+
+/* checkbox: control and label on one line, error below */
+.rfe-field--checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  flex-wrap: wrap;
+}
+
+.rfe-field--checkbox .rfe-field__label {
+  order: 2;
+  margin: 0;
+  font-weight: 400;
+}
+
+.rfe-field--checkbox .rfe-checkbox {
+  order: 1;
+}
+
+.rfe-field--checkbox .rfe-field__error {
+  order: 3;
+  inline-size: 100%;
+  margin: 0;
+}
+
+/* grouped fields (lists) */
+fieldset.rfe-field {
+  border: 1px solid var(--rfe-color-border, #767676);
+  border-radius: var(--rfe-radius, 4px);
+  padding: var(--rfe-space, 0.75rem);
+}
+
+fieldset.rfe-field > .rfe-field__label {
+  padding-inline: 0.25em;
+}
+
+/* lists */
+.rfe-list__row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5em;
+  margin-block-end: 0.375em;
+}
+
+.rfe-list__cell {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.rfe-list__cell .rfe-input {
+  inline-size: 100%;
+  max-inline-size: none;
+}
+
+.rfe-list__cell-error {
+  color: var(--rfe-color-error, #b3261e);
+  font-size: var(--rfe-font-size-small, 0.8125rem);
+  min-height: 1.25em;
+}
+
+.rfe-list__remove,
+.rfe-list__add {
+  font: inherit;
+  padding: 0.375em 0.625em;
+  border: 1px solid var(--rfe-color-border, #767676);
+  border-radius: var(--rfe-radius, 4px);
+  background: #fff;
+  cursor: pointer;
+}
+
+.rfe-list__remove:disabled,
+.rfe-list__add:disabled {
+  color: var(--rfe-color-muted, #5f5f5f);
+  background: var(--rfe-readonly-bg, #f3f3f3);
+  cursor: not-allowed;
+}

@@ -20,7 +20,7 @@
   ],
   "type": "module",
   "sideEffects": [
-    "*.css"
+    "**/*.css"
   ],
   "files": [
     "dist"
@@ -29,7 +29,8 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
-    }
+    },
+    "./styles.css": "./dist/styles.css"
   },
   "scripts": {
     "build": "tsup",
