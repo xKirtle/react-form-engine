@@ -1,6 +1,7 @@
 import { describe, expectTypeOf, test } from "vitest";
 import type { FieldMap } from "../fields";
 import type { KeyValueEntry } from "../registry";
+import type { ListRow } from "../rows";
 import type { FormValueOf, FormValuesOf } from "../values";
 
 interface Project {
@@ -74,12 +75,12 @@ describe("FormValueOf", () => {
     >().toEqualTypeOf<string>();
   });
 
-  test("with a transform, the parse output", () => {
+  test("with a transform, the parse output (lists wrapped in rows)", () => {
     expectTypeOf<
       FormValueOf<Project, Fields["createdAt"]>
     >().toEqualTypeOf<string>();
     expectTypeOf<FormValueOf<Project, Fields["memberRoles"]>>().toEqualTypeOf<
-      { key: string; value: string }[]
+      ListRow<{ key: string; value: string }>[]
     >();
   });
 });
@@ -92,7 +93,7 @@ describe("FormValuesOf", () => {
       visibility: "private" | "public";
       nickname: string;
       createdAt: string;
-      memberRoles: { key: string; value: string }[];
+      memberRoles: ListRow<{ key: string; value: string }>[];
     }>();
   });
 
@@ -104,7 +105,7 @@ describe("FormValuesOf", () => {
       pairs: { key: "pairs", type: "keyValueList" },
     } as const satisfies FieldMap<Api>;
     expectTypeOf<FormValueOf<Api, (typeof map)["pairs"]>>().toEqualTypeOf<
-      KeyValueEntry[]
+      ListRow<KeyValueEntry>[]
     >();
   });
 });

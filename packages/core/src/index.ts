@@ -16,6 +16,13 @@ export type {
   SelectItem,
 } from "./types/registry";
 export type {
+  ListRow,
+  RowListKeys,
+  RowMeta,
+  RowOrigin,
+  RowSeedSpec,
+} from "./types/rows";
+export type {
   StandardSchemaIssue,
   StandardSchemaProps,
   StandardSchemaResult,
