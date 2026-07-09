@@ -117,6 +117,10 @@ everything in between.
 
 - The [live demo](https://xkirtle.github.io/react-form-engine/demo/) walks
   every engine feature with an inspectable state readout.
-- Guide pages for each concept — field definitions, transforms, modules,
-  rules, the row model, validation display, rendering, and localization —
-  are being written alongside the first release.
+- [Field definitions](./field-definitions) is the natural next page — the
+  vocabulary everything else builds on. From there the sidebar reads in
+  order: [transforms](./transforms), [modules](./modules),
+  [rules](./rules), [validation](./validation), the
+  [row model](./row-model), [rendering](./rendering),
+  [custom field types](./custom-field-types), and
+  [localization](./localization).

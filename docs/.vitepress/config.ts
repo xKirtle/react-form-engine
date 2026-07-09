@@ -23,7 +23,18 @@ export default defineConfig({
     sidebar: [
       {
         text: "Guide",
-        items: [{ text: "Quickstart", link: "/guide/quickstart" }],
+        items: [
+          { text: "Quickstart", link: "/guide/quickstart" },
+          { text: "Field definitions", link: "/guide/field-definitions" },
+          { text: "Transforms", link: "/guide/transforms" },
+          { text: "Modules & context", link: "/guide/modules" },
+          { text: "Rules & the engine API", link: "/guide/rules" },
+          { text: "Validation & errors", link: "/guide/validation" },
+          { text: "The row model", link: "/guide/row-model" },
+          { text: "Rendering", link: "/guide/rendering" },
+          { text: "Custom field types", link: "/guide/custom-field-types" },
+          { text: "Localization", link: "/guide/localization" },
+        ],
       },
       {
         text: "API reference",
