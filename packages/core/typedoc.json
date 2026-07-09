@@ -8,5 +8,21 @@
     "ValueSlots",
     "RawFormValueOf",
     "RowItemOf"
+  ],
+  "groupOrder": [
+    "Builder",
+    "Hooks",
+    "Components",
+    "Schema",
+    "Field types",
+    "Rules",
+    "Modules",
+    "Rows",
+    "Validation",
+    "Engine",
+    "Rendering",
+    "Messages",
+    "Advanced",
+    "*"
   ]
 }

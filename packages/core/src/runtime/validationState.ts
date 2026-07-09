@@ -9,6 +9,7 @@ import {
   validateFields,
 } from "./validate";
 
+/** @group Validation */
 export interface ValidationController<
   TApi = unknown,
   TContext = unknown,

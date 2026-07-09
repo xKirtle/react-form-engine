@@ -9,5 +9,12 @@
   "cleanOutputDir": true,
   "includeVersion": false,
   "excludePrivate": true,
-  "excludeInternal": true
+  "excludeInternal": true,
+  "useCodeBlocks": true,
+  "parametersFormat": "table",
+  "interfacePropertiesFormat": "table",
+  "typeDeclarationFormat": "table",
+  "navigation": {
+    "includeGroups": true
+  }
 }

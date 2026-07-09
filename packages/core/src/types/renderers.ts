@@ -3,7 +3,11 @@ import type { EngineMessages } from "./messages";
 import type { FieldPresentation } from "./presentation";
 import type { SelectItem } from "./registry";
 
-/** The resolved definition, as a renderer sees it. */
+/**
+ * The resolved definition, as a renderer sees it.
+ *
+ * @group Rendering
+ */
 export interface RenderedFieldDefinition {
   type: string;
   label?: string;
@@ -19,6 +23,8 @@ export interface RenderedFieldDefinition {
  *
  * Renderers are mounted as components, never invoked as functions, so
  * hooks inside them are safe.
+ *
+ * @group Rendering
  */
 export interface FieldRenderProps {
   name: string;
@@ -35,7 +41,12 @@ export interface FieldRenderProps {
   messages: EngineMessages;
 }
 
+/** @group Rendering */
 export type FieldRenderer = ComponentType<FieldRenderProps>;
 
-/** Field type name → renderer. Mergeable via nested `FormRenderers`. */
+/**
+ * Field type name → renderer. Mergeable via nested `FormRenderers`.
+ *
+ * @group Rendering
+ */
 export type RendererMap = Readonly<Record<string, FieldRenderer>>;

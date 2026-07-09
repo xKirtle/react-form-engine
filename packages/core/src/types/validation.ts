@@ -9,6 +9,8 @@ import type { StandardSchemaV1 } from "./standardSchema";
  * and rule messages route through the localization layer. Logic that data
  * can't express goes in `custom`; arbitrary value-shape validation goes in
  * `schema`.
+ *
+ * @group Validation
  */
 export interface BaseValidation<TValue> {
   /** Rejects empty values. Pass an object to override the message. */
@@ -30,23 +32,30 @@ export interface BaseValidation<TValue> {
   schema?: StandardSchemaV1<TValue>;
 }
 
+/** @group Validation */
 export interface StringValidation extends BaseValidation<string> {
   minLength?: { value: number; message?: string };
   maxLength?: { value: number; message?: string };
   pattern?: { value: RegExp; message?: string };
 }
 
+/** @group Validation */
 export interface NumberValidation extends BaseValidation<number> {
   min?: { value: number; message?: string };
   max?: { value: number; message?: string };
 }
 
-/** `min`/`max` are ISO 8601 date strings, matching the date value domain. */
+/**
+ * `min`/`max` are ISO 8601 date strings, matching the date value domain.
+ *
+ * @group Validation
+ */
 export interface DateValidation extends BaseValidation<string> {
   min?: { value: string; message?: string };
   max?: { value: string; message?: string };
 }
 
+/** @group Validation */
 export interface ListValidation<TItem> extends BaseValidation<TItem[]> {
   minItems?: { value: number; message?: string };
   maxItems?: { value: number; message?: string };
@@ -57,6 +66,8 @@ export interface ListValidation<TItem> extends BaseValidation<TItem[]> {
  * unless their registry entry declares an explicit vocabulary (e.g. `select`
  * narrows to {@link BaseValidation} — free-text rules make no sense on a
  * closed option set).
+ *
+ * @group Validation
  */
 export type DefaultValidationFor<TValue> = [TValue] extends [string]
   ? StringValidation

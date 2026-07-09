@@ -2,6 +2,8 @@
  * The runtime half of a field type — what the engine needs to know beyond
  * the type level. Custom field types provide one of these alongside their
  * registry augmentation.
+ *
+ * @group Field types
  */
 export interface FieldTypeRuntime {
   /**

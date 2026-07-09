@@ -6,6 +6,8 @@ import type { AnyRule } from "../types/rules";
  * The flattened result of applying modules to a field map for one context:
  * what a form instance actually has. `fields` iterates in first-appearance
  * order — the order AutoFields renders.
+ *
+ * @group Advanced
  */
 export interface ResolvedSchema<
   TApi,

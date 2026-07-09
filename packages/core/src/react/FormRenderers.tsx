@@ -6,6 +6,8 @@ const RenderersContext = createContext<RendererMap>({});
 /**
  * Provides the renderer map. Nested providers merge over outer ones, so an
  * app-level map can be extended or overridden per form or per section.
+ *
+ * @group Components
  */
 export function FormRenderers(props: {
   renderers: RendererMap;
@@ -23,6 +25,7 @@ export function FormRenderers(props: {
   );
 }
 
+/** @group Components */
 export function useRenderers(): RendererMap {
   return useContext(RenderersContext);
 }

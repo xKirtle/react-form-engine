@@ -4,6 +4,8 @@ import { type ReactNode, useId } from "react";
  * Attributes for the framed control, spread onto the input/select. The
  * error region's id is always referenced (the empty live region resolves),
  * so announcements work from the first error on.
+ *
+ * @group Field chrome
  */
 export interface FieldControlProps {
   id: string;
@@ -12,6 +14,7 @@ export interface FieldControlProps {
   "aria-required": true | undefined;
 }
 
+/** @group Field chrome */
 export interface FieldFrameProps {
   label: ReactNode;
   description?: string | undefined;
@@ -34,6 +37,8 @@ export interface FieldFrameProps {
  * Class names are stable API for styling: `rfe-field`, `rfe-field__label`,
  * `rfe-field__description`, `rfe-field__error`, `rfe-field__required`,
  * and the `rfe-field--invalid` / `rfe-field--group` modifiers.
+ *
+ * @group Field chrome
  */
 export function FieldFrame(props: FieldFrameProps) {
   const baseId = useId();

@@ -11,11 +11,13 @@ import { type AnyFormBundle, FormContext, useFormContext } from "./FormContext";
 import { useRenderers } from "./FormRenderers";
 import { useFieldProps } from "./useField";
 
+/** @group Components */
 export interface FormProps {
   form: AnyFormBundle;
   children: ReactNode;
 }
 
+/** @group Components */
 export interface FieldProps {
   name: string;
   /**
@@ -25,6 +27,7 @@ export interface FieldProps {
   children?: (api: FieldRenderProps) => ReactNode;
 }
 
+/** @group Components */
 export interface AutoFieldsProps {
   /** Names to skip, on top of fields claimed by explicit `Form.Field`s. */
   except?: readonly string[];
@@ -34,6 +37,8 @@ export interface AutoFieldsProps {
 /**
  * The form's rendering root: provides the bundle to `Form.Field` and
  * `Form.AutoFields`. Headless — renders no markup of its own.
+ *
+ * @group Components
  */
 export function Form(props: FormProps) {
   const [claims] = useState(createClaimRegistry);

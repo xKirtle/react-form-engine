@@ -6,7 +6,11 @@ import { builtinFieldTypeRuntimes, type FieldTypeRuntime } from "./fieldTypes";
 import type { ResolvedSchema } from "./resolver";
 import { isBlankItemDefault, isCompleteItemDefault } from "./rowModel";
 
-/** Raw validity for one field. `cells` is rowId → column → message. */
+/**
+ * Raw validity for one field. `cells` is rowId → column → message.
+ *
+ * @group Validation
+ */
 export interface FieldValidationResult {
   errors: readonly string[];
   cells: ReadonlyMap<string, Readonly<Record<string, string>>>;

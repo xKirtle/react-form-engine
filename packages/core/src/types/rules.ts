@@ -2,7 +2,11 @@ import type { FormEngineApi } from "./engine";
 import type { FieldMap } from "./fields";
 import type { FormValueOf } from "./values";
 
-/** A watch tuple's form values, positionally. */
+/**
+ * A watch tuple's form values, positionally.
+ *
+ * @group Rules
+ */
 export type WatchedValues<
   TApi,
   TFields extends FieldMap<TApi>,
@@ -20,6 +24,8 @@ export type WatchedValues<
  * `TContext` is contravariant (`in`): a rule written against a base
  * context — or none — serves any form whose context extends it, so form
  * variants share one rule set.
+ *
+ * @group Rules
  */
 export interface Rule<
   TApi,
@@ -37,6 +43,8 @@ export interface Rule<
  * The storage form of a rule, with the watch tuple erased — what modules
  * and the resolver traffic in. Any concrete {@link Rule} is assignable to
  * it; the runtime re-derives watched values by name.
+ *
+ * @group Rules
  */
 export interface AnyRule<TApi, in TContext, TFields extends FieldMap<TApi>> {
   watch: readonly (keyof TFields & string)[];

@@ -7,11 +7,14 @@
  * the engine's validity pass is synchronous: a validator that returns a
  * Promise is reported as a runtime error pointing at the external-error
  * channel (`setServerError`).
+ *
+ * @group Validation
  */
 export interface StandardSchemaV1<Input = unknown, Output = Input> {
   readonly "~standard": StandardSchemaProps<Input, Output>;
 }
 
+/** @group Validation */
 export interface StandardSchemaProps<Input, Output> {
   readonly version: 1;
   readonly vendor: string;
@@ -24,10 +27,12 @@ export interface StandardSchemaProps<Input, Output> {
   };
 }
 
+/** @group Validation */
 export type StandardSchemaResult<Output> =
   | { readonly value: Output; readonly issues?: undefined }
   | { readonly issues: readonly StandardSchemaIssue[] };
 
+/** @group Validation */
 export interface StandardSchemaIssue {
   readonly message: string;
   readonly path?: readonly (PropertyKey | { readonly key: PropertyKey })[];

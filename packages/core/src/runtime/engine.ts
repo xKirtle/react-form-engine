@@ -34,6 +34,7 @@ export interface EngineOptions<TApi, TContext, TFields extends FieldMap<TApi>> {
   hiddenValues?: "omit" | "null";
 }
 
+/** @group Advanced */
 export interface VisibilityStore {
   isVisible(name: string): boolean;
   /** The current hidden set — a stable reference until the next change. */
@@ -41,11 +42,13 @@ export interface VisibilityStore {
   subscribe(listener: () => void): () => void;
 }
 
+/** @group Advanced */
 export interface OptionsStore {
   get(name: string): readonly SelectItem[] | undefined;
   subscribe(listener: () => void): () => void;
 }
 
+/** @group Advanced */
 export interface ServerErrorsStore {
   get(name: string): string | undefined;
   entries(): ReadonlyMap<string, string>;
@@ -56,6 +59,8 @@ export interface ServerErrorsStore {
  * Everything the engine owns, for the layers above it. `engine` is the
  * public rung-2 surface (user channel); `ruleScope` is the same surface on
  * the derived channel — hand it to rules, never to page code.
+ *
+ * @group Advanced
  */
 export interface FormEngineInternals<
   TApi,

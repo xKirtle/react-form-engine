@@ -15,6 +15,8 @@ type RowItemOf<TApi, TFields extends FieldMap<TApi>, N extends keyof TFields> =
  * Reads return the form model (lists as rows); writes take plain values —
  * the engine owns row identity and provenance, so callers never construct
  * rows.
+ *
+ * @group Engine
  */
 export interface FormEngineApi<TApi, TFields extends FieldMap<TApi>> {
   getValue<N extends keyof TFields & string>(

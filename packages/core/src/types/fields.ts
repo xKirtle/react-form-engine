@@ -15,6 +15,8 @@ import type { KnownRowSpec } from "./rows";
  * omit the transform; one whose types differ is *required* to provide it —
  * the compiler enforces the boundary, so no cast can smuggle a mismatch
  * past it.
+ *
+ * @group Schema
  */
 export interface Transform<TApiValue, TFormValue> {
   parse: (apiValue: TApiValue) => TFormValue;
@@ -61,10 +63,16 @@ type KnownRowsSlot<TFormValue> = TFormValue extends readonly (infer TItem)[]
 /**
  * What a hidden field contributes at serialize: `"omit"` drops the key,
  * `"null"` sends an explicit null, `"keep"` serializes the current value.
+ *
+ * @group Schema
  */
 export type HiddenFieldPolicy = "omit" | "null" | "keep";
 
-/** A field definition for one specific key and field type. */
+/**
+ * A field definition for one specific key and field type.
+ *
+ * @group Schema
+ */
 export type FieldDefinitionFor<
   TApi,
   K extends DeepKeys<TApi>,
@@ -84,6 +92,8 @@ export type FieldDefinitionFor<
  * (addressable key × registered field type) combination. Definitions are
  * checked against it with `satisfies`, where the `key`/`type` discriminants
  * select the combination and excess property checking enforces its slots.
+ *
+ * @group Schema
  */
 export type FieldDefinition<TApi> = {
   [K in DeepKeys<TApi>]: {
@@ -102,5 +112,7 @@ export type FieldDefinition<TApi> = {
  *   visibility: { key: "settings.visibility", type: "select" },
  * } as const satisfies FieldMap<Project>;
  * ```
+ *
+ * @group Schema
  */
 export type FieldMap<TApi> = Record<string, FieldDefinition<TApi>>;

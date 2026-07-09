@@ -21,6 +21,7 @@ function frameProps(props: FieldRenderProps) {
   };
 }
 
+/** @group Renderers */
 export function StringListRenderer(props: FieldRenderProps) {
   const list = useListField<string>(props.name);
   return (
@@ -84,6 +85,7 @@ function StringRow(props: {
   );
 }
 
+/** @group Renderers */
 export function KeyValueListRenderer(props: FieldRenderProps) {
   const list = useListField<KeyValueItem>(props.name);
   return (

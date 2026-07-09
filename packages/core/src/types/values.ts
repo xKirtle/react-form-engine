@@ -27,6 +27,8 @@ type RawFormValueOf<TApi, F> = F extends {
  * items in {@link ListRow}s — row wrapping happens *after* transforms, so a
  * transform's `parse`/`serialize` (and `defaultValue`) work with plain
  * items while the engine owns row identity.
+ *
+ * @group Schema
  */
 export type FormValueOf<TApi, F> = F extends {
   type: infer T extends FieldTypeName;
@@ -43,6 +45,8 @@ export type FormValueOf<TApi, F> = F extends {
  * always the plain, unwrapped value — for lists, a plain item array. The
  * engine wraps items in rows and owns identity and provenance; callers
  * never construct rows.
+ *
+ * @group Schema
  */
 export type FormWriteValueOf<TApi, F> = RawFormValueOf<TApi, F>;
 
@@ -50,6 +54,8 @@ export type FormWriteValueOf<TApi, F> = RawFormValueOf<TApi, F>;
  * The full form model implied by a field map: field name → form value.
  * Modifiers are stripped — the schema literal is `readonly`, the values
  * object it implies is not.
+ *
+ * @group Schema
  */
 export type FormValuesOf<TApi, TFields extends FieldMap<TApi>> = {
   -readonly [N in keyof TFields]-?: FormValueOf<TApi, TFields[N]>;

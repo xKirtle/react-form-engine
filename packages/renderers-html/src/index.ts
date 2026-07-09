@@ -20,7 +20,11 @@ export {
   TextRenderer,
 };
 
-/** Renderers for every built-in field type, on native HTML elements. */
+/**
+ * Renderers for every built-in field type, on native HTML elements.
+ *
+ * @group Renderers
+ */
 export const htmlRenderers: RendererMap = {
   text: TextRenderer,
   number: NumberRenderer,

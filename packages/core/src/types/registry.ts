@@ -12,6 +12,8 @@ import type {
  * The validation slot defaults from the value domain (a `number`-valued
  * type gets `min`/`max` for free), so most registrations only state value
  * and config. Declare the third parameter to narrow or extend it.
+ *
+ * @group Field types
  */
 export interface FieldTypeSpec<
   TValue,
@@ -24,13 +26,21 @@ export interface FieldTypeSpec<
   validation: TValidation;
 }
 
-/** An option in a `select` field. */
+/**
+ * An option in a `select` field.
+ *
+ * @group Field types
+ */
 export interface SelectItem {
   label: string;
   value: string;
 }
 
-/** One entry of a `keyValueList` field. */
+/**
+ * One entry of a `keyValueList` field.
+ *
+ * @group Field types
+ */
 export interface KeyValueEntry {
   key: string;
   value: string;
@@ -55,6 +65,8 @@ export interface KeyValueEntry {
  * Note: `date` deliberately holds an ISO 8601 string, not a `Date` — API
  * models overwhelmingly exchange dates as strings, and binding a `Date`-typed
  * key to a date field then requires an explicit transform.
+ *
+ * @group Field types
  */
 export interface FieldTypeRegistry {
   text: FieldTypeSpec<string>;
@@ -70,17 +82,33 @@ export interface FieldTypeRegistry {
   keyValueList: FieldTypeSpec<KeyValueEntry[]>;
 }
 
-/** The name of a registered field type. */
+/**
+ * The name of a registered field type.
+ *
+ * @group Field types
+ */
 export type FieldTypeName = keyof FieldTypeRegistry;
 
-/** The form-model value domain of a field type. */
+/**
+ * The form-model value domain of a field type.
+ *
+ * @group Field types
+ */
 export type FieldValueOf<TType extends FieldTypeName> =
   FieldTypeRegistry[TType]["value"];
 
-/** The configuration object a field type's definitions accept. */
+/**
+ * The configuration object a field type's definitions accept.
+ *
+ * @group Field types
+ */
 export type FieldConfigOf<TType extends FieldTypeName> =
   FieldTypeRegistry[TType]["config"];
 
-/** The validation vocabulary a field type offers. */
+/**
+ * The validation vocabulary a field type offers.
+ *
+ * @group Field types
+ */
 export type FieldValidationOf<TType extends FieldTypeName> =
   FieldTypeRegistry[TType]["validation"];

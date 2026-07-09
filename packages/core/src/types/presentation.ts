@@ -5,6 +5,8 @@
  * `invalid` is raw validity regardless of gating, for validity indicators
  * that must not wait for touch (e.g. a disabled submit button or an
  * editor's status dot).
+ *
+ * @group Validation
  */
 export interface FieldPresentation {
   error: string | undefined;

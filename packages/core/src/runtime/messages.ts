@@ -1,5 +1,6 @@
 import type { EngineMessages, EngineMessagesOverride } from "../types/messages";
 
+/** @group Messages */
 export const englishMessages: EngineMessages = {
   validation: {
     required: "This field is required",
@@ -29,6 +30,8 @@ export const englishMessages: EngineMessages = {
  * Merges overrides onto the defaults, later overrides winning per message.
  * Sections merge shallowly — an override replaces individual messages, not
  * whole sections.
+ *
+ * @group Messages
  */
 export function mergeMessages(
   base: EngineMessages,

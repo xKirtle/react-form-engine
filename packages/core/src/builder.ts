@@ -8,6 +8,8 @@ import type { Rule } from "./types/rules";
  * they return their argument unchanged and exist so rules and modules
  * infer completely from the call site — watch tuples, `when`/`apply`
  * parameters, overrides — with no type annotations.
+ *
+ * @group Builder
  */
 export interface BoundFormBuilder<
   TApi,
@@ -34,7 +36,11 @@ export interface BoundFormBuilder<
   ): ModuleFactory<TApi, TContext, TFields>;
 }
 
-/** The entry point returned by {@link formBuilder}. */
+/**
+ * The entry point returned by {@link formBuilder}.
+ *
+ * @group Builder
+ */
 export interface FormBuilder<TApi> {
   withFields<TFields extends FieldMap<TApi>>(
     fields: TFields,
@@ -62,6 +68,8 @@ function boundFormBuilder<
  * const b = formBuilder<Project>().withFields(projectFields);
  * const bc = b.withContext<ProjectFormCtx>();
  * ```
+ *
+ * @group Builder
  */
 export function formBuilder<TApi>(): FormBuilder<TApi> {
   return {

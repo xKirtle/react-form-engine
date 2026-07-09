@@ -24,6 +24,8 @@ type Terminal =
  * - built-in object types (`Date`, `RegExp`) and functions are leaves;
  * - optional objects are traversed (an absent parent is a parse concern,
  *   not a typing one).
+ *
+ * @group Schema
  */
 export type DeepKeys<T> =
   NonNullable<T> extends infer U
@@ -43,6 +45,8 @@ export type DeepKeys<T> =
  * optionality is stripped hop by hop, so a path through an optional object
  * resolves to the leaf's own type; an optional leaf keeps its `undefined`.
  * Unknown paths resolve to `never`.
+ *
+ * @group Schema
  */
 export type DeepValue<
   T,

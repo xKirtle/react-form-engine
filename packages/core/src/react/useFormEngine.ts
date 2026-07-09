@@ -21,6 +21,7 @@ import type { FieldMap } from "../types/fields";
 import type { EngineMessages, EngineMessagesOverride } from "../types/messages";
 import type { ModuleInput } from "../types/modules";
 
+/** @group Hooks */
 export interface UseFormEngineOptions<
   TApi,
   TContext,
@@ -40,6 +41,7 @@ export interface UseFormEngineOptions<
   onSubmit?: (apiValues: TApi) => void | Promise<void>;
 }
 
+/** @group Hooks */
 export interface UseFormEngineReturn<
   TApi,
   TContext,
@@ -76,6 +78,8 @@ export interface UseFormEngineReturn<
  * *identity* changes, modules re-resolve and the schema is swapped in
  * place — display state (touched, submitted, server errors) survives.
  * Only `reset()` clears it.
+ *
+ * @group Hooks
  */
 export function useFormEngine<TApi, TContext, TFields extends FieldMap<TApi>>(
   options: UseFormEngineOptions<TApi, TContext, TFields>,

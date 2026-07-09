@@ -9,6 +9,8 @@ import type { AnyRule } from "./rules";
  * the field is). Typed against the field's wide definition shape, not the
  * schema literal, so overriding a label is not constrained to the original
  * string.
+ *
+ * @group Modules
  */
 export type FieldOverride<TApi, F> = F extends {
   key: infer K extends DeepKeys<TApi>;
@@ -17,7 +19,11 @@ export type FieldOverride<TApi, F> = F extends {
   ? Omit<Partial<FieldDefinitionFor<TApi, K, T>>, "key" | "type">
   : never;
 
-/** API-model values by path — what a module's `defaults` contribute. */
+/**
+ * API-model values by path — what a module's `defaults` contribute.
+ *
+ * @group Modules
+ */
 export type ApiDefaults<TApi> = {
   [K in DeepKeys<TApi>]?: DeepValue<TApi, K>;
 };
@@ -34,6 +40,8 @@ export type ApiDefaults<TApi> = {
  *
  * `TContext` is contravariant, like rules: a base-context module serves any
  * form whose context extends it.
+ *
+ * @group Modules
  */
 export interface FormModule<TApi, in TContext, TFields extends FieldMap<TApi>> {
   fields: readonly (keyof TFields & string)[];
@@ -45,12 +53,18 @@ export interface FormModule<TApi, in TContext, TFields extends FieldMap<TApi>> {
 /**
  * A context-driven module: resolved once per (modules, context) resolution.
  * Returning `null` opts the module out entirely for this form instance.
+ *
+ * @group Modules
  */
 export type ModuleFactory<TApi, TContext, TFields extends FieldMap<TApi>> = (
   context: TContext,
 ) => FormModule<TApi, TContext, TFields> | null;
 
-/** What a form's `modules` list accepts: static modules and factories. */
+/**
+ * What a form's `modules` list accepts: static modules and factories.
+ *
+ * @group Modules
+ */
 export type ModuleInput<TApi, TContext, TFields extends FieldMap<TApi>> =
   | FormModule<TApi, TContext, TFields>
   | ModuleFactory<TApi, TContext, TFields>;

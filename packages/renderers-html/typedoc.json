@@ -1,5 +1,6 @@
 {
   "$schema": "https://typedoc.org/schema.json",
   "entryPoints": ["src/index.ts"],
-  "tsconfig": "tsconfig.json"
+  "tsconfig": "tsconfig.json",
+  "groupOrder": ["Renderers", "Field chrome", "*"]
 }

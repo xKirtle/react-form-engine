@@ -12,6 +12,7 @@ function frameProps(
   };
 }
 
+/** @group Renderers */
 export function TextRenderer(props: FieldRenderProps) {
   return (
     <FieldFrame {...frameProps(props)}>
@@ -29,6 +30,7 @@ export function TextRenderer(props: FieldRenderProps) {
   );
 }
 
+/** @group Renderers */
 export function NumberRenderer(props: FieldRenderProps) {
   const value = props.value as number;
   return (
@@ -47,6 +49,7 @@ export function NumberRenderer(props: FieldRenderProps) {
   );
 }
 
+/** @group Renderers */
 export function DateRenderer(props: FieldRenderProps) {
   return (
     <FieldFrame {...frameProps(props)}>
@@ -64,6 +67,7 @@ export function DateRenderer(props: FieldRenderProps) {
   );
 }
 
+/** @group Renderers */
 export function CheckboxRenderer(props: FieldRenderProps) {
   return (
     <FieldFrame {...frameProps(props)} className="rfe-field--checkbox">
@@ -81,6 +85,7 @@ export function CheckboxRenderer(props: FieldRenderProps) {
   );
 }
 
+/** @group Renderers */
 export function SelectRenderer(props: FieldRenderProps) {
   return (
     <FieldFrame {...frameProps(props)}>

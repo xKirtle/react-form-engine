@@ -6,6 +6,8 @@ import type { UseFormEngineReturn } from "./useFormEngine";
 /**
  * The reactive, typed form value of one field. Re-renders the caller only
  * when this field's value changes.
+ *
+ * @group Hooks
  */
 export function useFormValue<
   TApi,

@@ -8,6 +8,7 @@ import type { FieldPresentation } from "../types/presentation";
 import type { ListRow, RowMeta, RowOrigin } from "../types/rows";
 import { useFormContext } from "./FormContext";
 
+/** @group Hooks */
 export interface ListFieldItem<TItem> {
   id: string;
   value: TItem;
@@ -21,6 +22,7 @@ export interface ListFieldItem<TItem> {
   markCellTouched(column: string): void;
 }
 
+/** @group Hooks */
 export interface ListFieldState<TItem> {
   items: readonly ListFieldItem<TItem>[];
   /** Appends a user row. */
@@ -34,6 +36,8 @@ export interface ListFieldState<TItem> {
  * Row-model list state for list renderers and custom list UIs. Works for
  * any list field; for string lists, `useListField<string>(name)`.
  * Must render inside `<Form>`.
+ *
+ * @group Hooks
  */
 export function useListField<TItem = unknown>(
   name: string,

@@ -7,6 +7,8 @@ import type { FormValueOf } from "./values";
  * `ensureRows` (rules or engine API), `"user"` rows by the list UI's add.
  * Provenance scopes removal (seeded cleanup never deletes user rows) and
  * lets validation and rendering treat machine rows differently.
+ *
+ * @group Rows
  */
 export type RowOrigin = "api" | "seeded" | "user";
 
@@ -15,6 +17,8 @@ export type RowOrigin = "api" | "seeded" | "user";
  * disables the removal affordance — and only that; locking cells is a
  * separate concern (`keyReadOnly` for a keyValueList's key column), kept
  * apart deliberately so seeded-but-editable rows are expressible.
+ *
+ * @group Rows
  */
 export interface RowMeta {
   pinned?: boolean;
@@ -28,6 +32,8 @@ export interface RowMeta {
  * engine relies on reference equality for no-op detection). `id` is
  * engine-generated and stable for the row's lifetime — it is the React key
  * and the address for per-cell errors.
+ *
+ * @group Rows
  */
 export interface ListRow<TItem> {
   readonly id: string;
@@ -41,6 +47,8 @@ export interface ListRow<TItem> {
  * existing row's value matches it, that row is adopted (meta applied, value
  * preserved) exactly once — a lease, not a subscription; otherwise a new
  * `"seeded"` row is created with `value`.
+ *
+ * @group Rows
  */
 export interface RowSeedSpec<TItem> {
   match?: Partial<TItem>;
@@ -54,6 +62,8 @@ export interface RowSeedSpec<TItem> {
  * merged onto it. Adopt-only — nothing is created when no row matches —
  * and permanent: unlike rule seeding this is not a lease, so releasing
  * seeded rows never strips it.
+ *
+ * @group Rows
  */
 export interface KnownRowSpec<TItem> {
   match: Partial<TItem>;
@@ -64,6 +74,8 @@ export interface KnownRowSpec<TItem> {
  * The field names whose form value is a row list with object items — the
  * keys `ensureRows`/`removeRows` accept. String lists have row identity
  * too, but no columns to seed or lock, so they are excluded from seeding.
+ *
+ * @group Rows
  */
 export type RowListKeys<TApi, TFields extends FieldMap<TApi>> = {
   [N in keyof TFields]: FormValueOf<TApi, TFields[N]> extends ListRow<

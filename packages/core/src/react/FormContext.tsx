@@ -7,6 +7,8 @@ import type { UseFormEngineReturn } from "./useFormEngine";
  * are erased here — `any` deliberately, not `unknown`: `FieldMap<unknown>`
  * has no valid definitions, so an unknown-typed bundle would reject every
  * concrete one.
+ *
+ * @group Advanced
  */
 // biome-ignore lint/suspicious/noExplicitAny: see above
 export type AnyFormBundle = UseFormEngineReturn<any, any, any>;

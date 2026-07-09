@@ -4,6 +4,7 @@ import type { FieldRenderProps } from "../types/renderers";
 import { Form } from "./Form";
 import type { UseFormEngineReturn } from "./useFormEngine";
 
+/** @group Components */
 export interface TypedFormComponents<TApi, TFields extends FieldMap<TApi>> {
   Field: (props: {
     name: keyof TFields & string;
@@ -20,6 +21,8 @@ export interface TypedFormComponents<TApi, TFields extends FieldMap<TApi>> {
  * `except` are compile-checked against the bundle's field map. The bundle
  * argument only anchors inference — the returned components are the untyped
  * originals.
+ *
+ * @group Components
  */
 export function formComponentsFor<
   TApi,
