@@ -1,11 +1,27 @@
+import type {
+  BaseValidation,
+  DateValidation,
+  DefaultValidationFor,
+} from "./validation";
+
 /**
  * The type-level shape of one field type: the value domain fields of this
- * type hold in the form model, and the configuration object their
- * definitions accept.
+ * type hold in the form model, the configuration object their definitions
+ * accept, and the validation vocabulary they offer.
+ *
+ * The validation slot defaults from the value domain (a `number`-valued
+ * type gets `min`/`max` for free), so most registrations only state value
+ * and config. Declare the third parameter to narrow or extend it.
  */
-export interface FieldTypeSpec<TValue, TConfig = undefined> {
+export interface FieldTypeSpec<
+  TValue,
+  TConfig = undefined,
+  TValidation extends BaseValidation<TValue> = DefaultValidationFor<TValue> &
+    BaseValidation<TValue>,
+> {
   value: TValue;
   config: TConfig;
+  validation: TValidation;
 }
 
 /** An option in a `select` field. */
@@ -43,9 +59,13 @@ export interface KeyValueEntry {
 export interface FieldTypeRegistry {
   text: FieldTypeSpec<string>;
   number: FieldTypeSpec<number>;
-  date: FieldTypeSpec<string>;
+  date: FieldTypeSpec<string, undefined, DateValidation>;
   checkbox: FieldTypeSpec<boolean>;
-  select: FieldTypeSpec<string, { items?: readonly SelectItem[] }>;
+  select: FieldTypeSpec<
+    string,
+    { items?: readonly SelectItem[] },
+    BaseValidation<string>
+  >;
   stringList: FieldTypeSpec<string[]>;
   keyValueList: FieldTypeSpec<KeyValueEntry[]>;
 }
@@ -60,3 +80,7 @@ export type FieldValueOf<TType extends FieldTypeName> =
 /** The configuration object a field type's definitions accept. */
 export type FieldConfigOf<TType extends FieldTypeName> =
   FieldTypeRegistry[TType]["config"];
+
+/** The validation vocabulary a field type offers. */
+export type FieldValidationOf<TType extends FieldTypeName> =
+  FieldTypeRegistry[TType]["validation"];
