@@ -1,3 +1,4 @@
+export type { FormEngineApi } from "./types/engine";
 export type {
   FieldDefinition,
   FieldDefinitionFor,
@@ -22,6 +23,7 @@ export type {
   RowOrigin,
   RowSeedSpec,
 } from "./types/rows";
+export type { AnyRule, Rule, WatchedValues } from "./types/rules";
 export type {
   StandardSchemaIssue,
   StandardSchemaProps,
@@ -36,4 +38,8 @@ export type {
   NumberValidation,
   StringValidation,
 } from "./types/validation";
-export type { FormValueOf, FormValuesOf } from "./types/values";
+export type {
+  FormValueOf,
+  FormValuesOf,
+  FormWriteValueOf,
+} from "./types/values";

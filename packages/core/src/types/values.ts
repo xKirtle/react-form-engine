@@ -39,6 +39,14 @@ export type FormValueOf<TApi, F> = F extends {
   : never;
 
 /**
+ * The value the write channel (`engine.setValue`) accepts for one field:
+ * always the plain, unwrapped value — for lists, a plain item array. The
+ * engine wraps items in rows and owns identity and provenance; callers
+ * never construct rows.
+ */
+export type FormWriteValueOf<TApi, F> = RawFormValueOf<TApi, F>;
+
+/**
  * The full form model implied by a field map: field name → form value.
  * Modifiers are stripped — the schema literal is `readonly`, the values
  * object it implies is not.
