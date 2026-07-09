@@ -1,3 +1,9 @@
+export type {
+  FieldDefinition,
+  FieldDefinitionFor,
+  FieldMap,
+  Transform,
+} from "./types/fields";
 export type { DeepKeys, DeepValue } from "./types/paths";
 export type {
   FieldConfigOf,
