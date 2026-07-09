@@ -1,10 +1,16 @@
 # react-form-engine
 
+[![CI](https://github.com/xKirtle/react-form-engine/actions/workflows/ci.yml/badge.svg)](https://github.com/xKirtle/react-form-engine/actions/workflows/ci.yml)
+
 Data-driven forms for React: schemas for vocabulary, code for logic.
 
 A form engine built on top of [TanStack Form](https://tanstack.com/form) that
 owns the full lifecycle — parsing, validation, visibility, serialization —
 with headless, pluggable rendering.
+
+**[Documentation](https://xkirtle.github.io/react-form-engine/)** ·
+**[Live demo](https://xkirtle.github.io/react-form-engine/demo/)** with an
+inspectable engine-state readout · first npm release coming as `0.1.0`
 
 ## Why another form library?
 
@@ -37,6 +43,64 @@ actively maintained, so the engine builds on it. It is not a thin wrapper,
 though: schema resolution, modules, transforms, rules, validation display
 policy, visibility, and the row model all live in the engine. In normal use
 you never touch TanStack Form directly.
+
+## What it looks like
+
+```tsx
+import { type FieldMap, Form, FormRenderers, useFormEngine } from "@react-form-engine/core";
+import { htmlRenderers } from "@react-form-engine/renderers-html";
+
+interface Project {
+  name: string;
+  kind: string;
+}
+
+// fields are data, checked against the API model by the compiler
+const fields = {
+  name: {
+    key: "name",
+    type: "text",
+    label: "Project name",
+    validation: { required: true, maxLength: { value: 40 } },
+  },
+  kind: {
+    key: "kind",
+    type: "select",
+    label: "Kind",
+    config: { items: [{ label: "Simple", value: "simple" }] },
+    defaultValue: "simple",
+  },
+} as const satisfies FieldMap<Project>;
+
+function ProjectForm() {
+  // one hook owns parse → validate → serialize → submit
+  const bundle = useFormEngine<Project, undefined, typeof fields>({
+    fields,
+    modules: [{ fields: ["name", "kind"] }],
+    context: undefined,
+    initialErrors: "gated",
+    onSubmit: async (project) => saveProject(project), // the API model
+  });
+
+  return (
+    <FormRenderers renderers={htmlRenderers}>
+      <Form form={bundle}>
+        <Form.AutoFields />
+      </Form>
+      <button type="button" onClick={() => void bundle.handleSubmit()}>
+        Save
+      </button>
+    </FormRenderers>
+  );
+}
+```
+
+The [quickstart](https://xkirtle.github.io/react-form-engine/guide/quickstart)
+walks through this step by step; the guides cover
+[modules](https://xkirtle.github.io/react-form-engine/guide/modules),
+[rules](https://xkirtle.github.io/react-form-engine/guide/rules), the
+[row model](https://xkirtle.github.io/react-form-engine/guide/row-model),
+and the rest of the engine.
 
 ## Packages
 
