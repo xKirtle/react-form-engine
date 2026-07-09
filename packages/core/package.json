@@ -1,0 +1,41 @@
+{
+  "name": "@react-form-engine/core",
+  "version": "0.0.0",
+  "description": "Data-driven form engine for React: typed field schemas, composable modules, rules, and headless rendering on top of TanStack Form.",
+  "license": "MIT",
+  "author": "Rodrigo Martins",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xKirtle/react-form-engine.git",
+    "directory": "packages/core"
+  },
+  "homepage": "https://github.com/xKirtle/react-form-engine#readme",
+  "bugs": "https://github.com/xKirtle/react-form-engine/issues",
+  "keywords": [
+    "react",
+    "form",
+    "forms",
+    "schema",
+    "headless",
+    "tanstack-form"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "peerDependencies": {
+    "@tanstack/react-form": "^1.0.0",
+    "react": ">=18"
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "name": "@react-form-engine/renderers-html",
+  "version": "0.0.0",
+  "description": "Accessible field renderers for @react-form-engine/core built on native HTML elements.",
+  "license": "MIT",
+  "author": "Rodrigo Martins",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xKirtle/react-form-engine.git",
+    "directory": "packages/renderers-html"
+  },
+  "homepage": "https://github.com/xKirtle/react-form-engine#readme",
+  "bugs": "https://github.com/xKirtle/react-form-engine/issues",
+  "keywords": [
+    "react",
+    "form",
+    "forms",
+    "renderers",
+    "accessibility"
+  ],
+  "type": "module",
+  "sideEffects": [
+    "*.css"
+  ],
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "peerDependencies": {
+    "@react-form-engine/core": "workspace:^",
+    "react": ">=18"
+  },
+  "devDependencies": {
+    "@react-form-engine/core": "workspace:*"
+  }
+}
