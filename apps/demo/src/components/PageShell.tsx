@@ -39,8 +39,8 @@ export function PageShell(props: {
 
         {props.children}
 
-        <section className="tries" aria-label="Experiments to run">
-          <h2 className="tries__title">Run these</h2>
+        <section className="tries" aria-label="Scenarios">
+          <h2 className="tries__title">Scenarios</h2>
           <ol>
             {props.tries.map((hint) => (
               <li key={hint}>{hint}</li>

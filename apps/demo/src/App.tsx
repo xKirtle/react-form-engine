@@ -51,11 +51,9 @@ export function App() {
 
   return (
     <div className="app">
-      <nav
-        className={menuOpen ? "nav nav--open" : "nav"}
-        aria-label="Guides"
-      >
+      <nav className={menuOpen ? "nav nav--open" : "nav"} aria-label="Guides">
         <div className="nav__bar">
+          {/* biome-ignore lint/a11y/useValidAnchor: "#/quickstart" is a real destination — the app is hash-routed — and the click handler only collapses the mobile menu */}
           <a className="nav__brand" href="#/quickstart" onClick={closeMenu}>
             react-form-engine
             <span className="nav__sub">live examples, one per guide</span>
