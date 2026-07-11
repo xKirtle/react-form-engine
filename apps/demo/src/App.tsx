@@ -5,7 +5,6 @@ import { CustomFieldTypes } from "./pages/CustomFieldTypes";
 import { FieldDefinitions } from "./pages/FieldDefinitions";
 import { Localization } from "./pages/Localization";
 import { ModulesContext } from "./pages/ModulesContext";
-import { Quickstart } from "./pages/Quickstart";
 import { Rendering } from "./pages/Rendering";
 import { RowModel } from "./pages/RowModel";
 import { Rules } from "./pages/Rules";
@@ -14,7 +13,6 @@ import { Validation } from "./pages/Validation";
 import "./app.css";
 
 const pages: Record<GuideSlug, () => ReactNode> = {
-  quickstart: () => <Quickstart />,
   "field-definitions": () => <FieldDefinitions />,
   transforms: () => <Transforms />,
   modules: () => <ModulesContext />,
@@ -26,8 +24,9 @@ const pages: Record<GuideSlug, () => ReactNode> = {
   localization: () => <Localization />,
 };
 
-/** Routes that predate the one-section-per-guide layout. */
+/** Routes that predate the current layout. */
 const legacyRoutes: Record<string, GuideSlug> = {
+  quickstart: "field-definitions",
   visibility: "rules",
   "server-errors": "validation",
 };
@@ -53,8 +52,12 @@ export function App() {
     <div className="app">
       <nav className={menuOpen ? "nav nav--open" : "nav"} aria-label="Guides">
         <div className="nav__bar">
-          {/* biome-ignore lint/a11y/useValidAnchor: "#/quickstart" is a real destination — the app is hash-routed — and the click handler only collapses the mobile menu */}
-          <a className="nav__brand" href="#/quickstart" onClick={closeMenu}>
+          {/* biome-ignore lint/a11y/useValidAnchor: the brand links to the first guide — the app is hash-routed — and the click handler only collapses the mobile menu */}
+          <a
+            className="nav__brand"
+            href="#/field-definitions"
+            onClick={closeMenu}
+          >
             react-form-engine
             <span className="nav__sub">live examples, one per guide</span>
           </a>

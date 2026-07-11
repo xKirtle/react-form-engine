@@ -9,16 +9,15 @@ export interface GuideMeta {
 }
 
 export const guides = [
-  { slug: "quickstart", num: "01", title: "Quickstart" },
-  { slug: "field-definitions", num: "02", title: "Field definitions" },
-  { slug: "transforms", num: "03", title: "Transforms" },
-  { slug: "modules", num: "04", title: "Modules & context" },
-  { slug: "rules", num: "05", title: "Rules & the engine API" },
-  { slug: "validation", num: "06", title: "Validation & errors" },
-  { slug: "row-model", num: "07", title: "The row model" },
-  { slug: "rendering", num: "08", title: "Rendering" },
-  { slug: "custom-field-types", num: "09", title: "Custom field types" },
-  { slug: "localization", num: "10", title: "Localization" },
+  { slug: "field-definitions", num: "01", title: "Field definitions" },
+  { slug: "transforms", num: "02", title: "Transforms" },
+  { slug: "modules", num: "03", title: "Modules & context" },
+  { slug: "rules", num: "04", title: "Rules & the engine API" },
+  { slug: "validation", num: "05", title: "Validation & errors" },
+  { slug: "row-model", num: "06", title: "The row model" },
+  { slug: "rendering", num: "07", title: "Rendering" },
+  { slug: "custom-field-types", num: "08", title: "Custom field types" },
+  { slug: "localization", num: "09", title: "Localization" },
 ] as const satisfies readonly GuideMeta[];
 
 export type GuideSlug = (typeof guides)[number]["slug"];

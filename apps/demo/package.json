@@ -12,7 +12,8 @@
     "@react-form-engine/renderers-html": "workspace:*",
     "@tanstack/react-form": "^1.33.0",
     "react": "^19.2.7",
-    "react-dom": "^19.2.7"
+    "react-dom": "^19.2.7",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/node": "^26.1.1",

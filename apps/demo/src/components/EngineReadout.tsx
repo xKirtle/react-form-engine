@@ -112,8 +112,8 @@ function FieldStateTable<
 }
 
 /**
- * The live view of what the engine holds: per-field metadata, the form
- * model (rows carry id/origin/meta), and the serialized API model.
+ * The live view of what the engine holds: per-field metadata, the
+ * serialized API model, and (opt-in) the engine's internal form model.
  */
 export function EngineReadout<
   TApi,
@@ -122,8 +122,11 @@ export function EngineReadout<
 >(props: {
   bundle: UseFormEngineReturn<TApi, TContext, TFields>;
   submitted?: unknown;
-  /** Open the form-model section by default (row-model pages). */
-  formModelOpen?: boolean;
+  /**
+   * Show the engine-internal form model. Omit it on pages where it would
+   * only distract — it's engine bookkeeping, not something users touch.
+   */
+  formModel?: "open" | "closed";
 }) {
   const { bundle } = props;
   const values = useSyncExternalStore(
@@ -138,18 +141,36 @@ export function EngineReadout<
   return (
     <aside className="readout" aria-label="Engine state">
       <div className="readout__title">engine state</div>
+      <p className="readout__hint">
+        What the engine holds for this form, live — it reacts as you interact.
+      </p>
       <StateBadges bundle={bundle} />
 
       <div className="readout__label">field state</div>
+      <p className="readout__hint">
+        One row per field; flags light up as fields are touched, hidden, or
+        invalid.
+      </p>
       <FieldStateTable bundle={bundle} />
 
-      <details className="readout__section" open={props.formModelOpen === true}>
-        <summary>form model</summary>
-        <pre className="readout__json">{JSON.stringify(values, null, 2)}</pre>
-      </details>
-
       <div className="readout__label">serialize()</div>
+      <p className="readout__hint">
+        The API payload <span className="flag--meta">onSubmit</span> would
+        receive right now.
+      </p>
       <pre className="readout__json">{JSON.stringify(serialized, null, 2)}</pre>
+
+      {props.formModel !== undefined && (
+        <details className="readout__section" open={props.formModel === "open"}>
+          <summary>form model — engine-internal</summary>
+          <p className="readout__hint">
+            How the engine stores values between parse and serialize (list rows
+            carry id / origin / meta). Your code reads it through the engine API
+            — never edits it directly.
+          </p>
+          <pre className="readout__json">{JSON.stringify(values, null, 2)}</pre>
+        </details>
+      )}
 
       {props.submitted !== undefined && (
         <>

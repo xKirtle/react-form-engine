@@ -105,7 +105,7 @@ export function Transforms() {
         "Add a label row and leave it blank — blank rows are dropped at serialize, so the object never gains an empty key.",
       ]}
       schema={schemaPeek}
-      readout={<EngineReadout bundle={bundle} formModelOpen />}
+      readout={<EngineReadout bundle={bundle} formModel="open" />}
     >
       <Exhibit>
         <FormRenderers renderers={htmlRenderers}>

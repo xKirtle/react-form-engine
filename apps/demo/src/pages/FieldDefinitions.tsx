@@ -109,7 +109,7 @@ export function FieldDefinitions() {
         "Switch payloads while a field is edited: switching re-parses from the chosen payload, so it's a reset by design — dirty state clears with it.",
       ]}
       schema={schemaPeek}
-      readout={<EngineReadout bundle={bundle} />}
+      readout={<EngineReadout bundle={bundle} formModel="closed" />}
     >
       <Exhibit>
         <div className="context-bar">
