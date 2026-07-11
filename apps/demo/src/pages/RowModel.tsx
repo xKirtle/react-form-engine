@@ -8,7 +8,8 @@ import {
 } from "@react-form-engine/core";
 import { FieldFrame, htmlRenderers } from "@react-form-engine/renderers-html";
 import { EngineReadout } from "../components/EngineReadout";
-import { PageShell } from "../components/PageShell";
+import { Exhibit, PageShell } from "../components/PageShell";
+import { guide } from "../guides";
 
 interface Project {
   delegation: boolean;
@@ -55,6 +56,29 @@ const modules = [
     rules: [delegateSeeding],
   }),
 ];
+
+const schemaPeek = `memberRoles: {
+  key: "memberRoles",
+  type: "keyValueList",
+  // facts about the data: API-sent owners are pinned, in every form
+  knownRows: [{ match: { key: "owner" }, meta: { pinned: true } }],
+},
+
+// behavior: delegated projects guarantee a delegate row
+const delegateSeeding = bc.rule({
+  watch: ["delegation"],
+  when: (delegation) => delegation,
+  apply: (form) => {
+    form.ensureRows("memberRoles", [{
+      match: { key: "delegate" },
+      value: { key: "delegate", value: "agent-7" },
+      meta: { pinned: true },
+    }]);
+  },
+  otherwise: (form) => {
+    form.removeRows("memberRoles", { origin: "seeded" });
+  },
+});`;
 
 /**
  * A custom list UI built on useListField — used here (instead of the
@@ -126,43 +150,51 @@ export function RowModel() {
 
   return (
     <PageShell
-      eyebrow="row model"
+      guide={guide("row-model")}
       title="Every row knows where it came from"
-      lede="Rows carry identity, provenance, and metadata. The API sent two
-        rows (the schema's knownRows pinned the owner); a rule seeds a
-        delegate; anything you add is yours. The origin tag on each row is
-        real engine state, not UI guesswork."
+      lede={
+        <>
+          Rows carry identity, provenance, and metadata in one object. The API
+          sent two rows (the schema&apos;s <code>knownRows</code> pinned the
+          owner); a rule seeds a delegate; anything you add is yours. The origin
+          stamp on each row is real engine state, not UI guesswork.
+        </>
+      }
       tries={[
-        "Toggle delegation on — a seeded, pinned delegate row appears. (The dirty badge reflects your checkbox edit; the seeded row itself never dirties.)",
+        "Toggle delegation on — a seeded, pinned delegate row appears. The dirty light reflects your checkbox edit; the seeded row itself never dirties.",
         "Toggle it off — the seeded row leaves. Rows with other origins never do.",
         "Type a row with key “delegate”, then toggle delegation on: the rule adopts your row — origin stays user, your value survives, only the pin is stamped.",
         "Toggle delegation back off after adoption: the pin is released, your row and edits remain.",
-        "Open the form model in the readout — each row is { id, value, origin, meta }. The pins and origin tags in the UI are that data, not styling; serialize() below it unwraps rows back to plain values.",
+        "Open the form model in the readout — each row is { id, value, origin, meta }. The pins and origin stamps in the UI are that data, not styling; serialize() below it unwraps rows back to plain values.",
       ]}
+      schema={schemaPeek}
       readout={<EngineReadout bundle={bundle} formModelOpen />}
     >
-      <FormRenderers renderers={htmlRenderers}>
-        <Form form={bundle}>
-          <Form.Field name="delegation" />
-          <Form.Field name="memberRoles">
-            {(api) => (
-              <FieldFrame
-                label={(api.definition.label as string) ?? api.name}
-                error={api.presentation.error}
-                required={api.required}
-                asGroup
-              >
-                {() => <OriginList />}
-              </FieldFrame>
-            )}
-          </Form.Field>
-        </Form>
-      </FormRenderers>
-      <p className="legend">
-        <span className="origin origin--api">api</span> loaded from the server
-        <span className="origin origin--seeded">seeded</span> created by a rule
-        <span className="origin origin--user">user</span> added by you
-      </p>
+      <Exhibit>
+        <FormRenderers renderers={htmlRenderers}>
+          <Form form={bundle}>
+            <Form.Field name="delegation" />
+            <Form.Field name="memberRoles">
+              {(api) => (
+                <FieldFrame
+                  label={(api.definition.label as string) ?? api.name}
+                  error={api.presentation.error}
+                  required={api.required}
+                  asGroup
+                >
+                  {() => <OriginList />}
+                </FieldFrame>
+              )}
+            </Form.Field>
+          </Form>
+        </FormRenderers>
+        <p className="legend">
+          <span className="origin origin--api">api</span> loaded from the server
+          <span className="origin origin--seeded">seeded</span> created by a
+          rule
+          <span className="origin origin--user">user</span> added by you
+        </p>
+      </Exhibit>
     </PageShell>
   );
 }

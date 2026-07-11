@@ -202,12 +202,21 @@ function runtimeOf(
   return runtime;
 }
 
-/** Deep clone for plain API data (objects and arrays; leaves copied by reference). */
+/**
+ * Deep clone for plain API data (objects and arrays; leaves copied by
+ * reference). Class instances — a `Date` awaiting a transform's `parse`,
+ * say — are leaves: rebuilding them property-by-property would strip
+ * their prototype and hand transforms an empty object.
+ */
 function cloneData<T>(value: T): T {
   if (Array.isArray(value)) {
     return value.map(cloneData) as T;
   }
   if (value !== null && typeof value === "object") {
+    const prototype: unknown = Object.getPrototypeOf(value);
+    if (prototype !== Object.prototype && prototype !== null) {
+      return value;
+    }
     const clone: Record<string, unknown> = {};
     for (const [key, entry] of Object.entries(value)) {
       clone[key] = cloneData(entry);

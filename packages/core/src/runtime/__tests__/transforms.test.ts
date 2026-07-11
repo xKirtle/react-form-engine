@@ -212,3 +212,49 @@ describe("serialize", () => {
     });
   });
 });
+
+describe("class instances in API data", () => {
+  interface Timed {
+    startedAt: Date;
+  }
+
+  const timedFields = {
+    startedAt: {
+      key: "startedAt",
+      type: "date",
+      transform: {
+        parse: (date: Date) => date.toISOString().slice(0, 10),
+        serialize: (iso: string) => new Date(iso),
+      },
+    },
+  } as const satisfies FieldMap<Timed>;
+
+  const timedSchema = resolveModules<Timed, undefined, typeof timedFields>({
+    fields: timedFields,
+    modules: [{ fields: ["startedAt"] }],
+    context: undefined,
+  });
+
+  const startedAt = new Date("2026-03-15T00:00:00Z");
+
+  it("reach transforms intact instead of flattened to {} by the clone", () => {
+    const parsed = parseApiValues({
+      schema: timedSchema,
+      apiValues: { startedAt },
+    });
+    expect(parsed.formValues.startedAt).toBe("2026-03-15");
+  });
+
+  it("survive the serialize round trip", () => {
+    const parsed = parseApiValues({
+      schema: timedSchema,
+      apiValues: { startedAt },
+    });
+    const out = serializeFormValues({
+      schema: timedSchema,
+      formValues: parsed.formValues,
+      passthrough: parsed.passthrough,
+    });
+    expect(out.startedAt).toBeInstanceOf(Date);
+  });
+});

@@ -1,42 +1,36 @@
-import { useSyncExternalStore } from "react";
+import type { ReactNode } from "react";
+import { useState, useSyncExternalStore } from "react";
+import { DOCS_URL, type GuideSlug, guides } from "./guides";
+import { CustomFieldTypes } from "./pages/CustomFieldTypes";
+import { FieldDefinitions } from "./pages/FieldDefinitions";
 import { Localization } from "./pages/Localization";
 import { ModulesContext } from "./pages/ModulesContext";
 import { Quickstart } from "./pages/Quickstart";
+import { Rendering } from "./pages/Rendering";
 import { RowModel } from "./pages/RowModel";
-import { ServerErrors } from "./pages/ServerErrors";
-import { ValidationDisplay } from "./pages/ValidationDisplay";
-import { Visibility } from "./pages/Visibility";
+import { Rules } from "./pages/Rules";
+import { Transforms } from "./pages/Transforms";
+import { Validation } from "./pages/Validation";
 import "./app.css";
 
-const pages = [
-  { slug: "quickstart", label: "Quickstart", render: () => <Quickstart /> },
-  {
-    slug: "validation",
-    label: "Validation display",
-    render: () => <ValidationDisplay />,
-  },
-  {
-    slug: "server-errors",
-    label: "Server errors",
-    render: () => <ServerErrors />,
-  },
-  {
-    slug: "visibility",
-    label: "Visibility & rules",
-    render: () => <Visibility />,
-  },
-  { slug: "row-model", label: "Row model", render: () => <RowModel /> },
-  {
-    slug: "modules",
-    label: "Modules & context",
-    render: () => <ModulesContext />,
-  },
-  {
-    slug: "localization",
-    label: "Localization",
-    render: () => <Localization />,
-  },
-] as const;
+const pages: Record<GuideSlug, () => ReactNode> = {
+  quickstart: () => <Quickstart />,
+  "field-definitions": () => <FieldDefinitions />,
+  transforms: () => <Transforms />,
+  modules: () => <ModulesContext />,
+  rules: () => <Rules />,
+  validation: () => <Validation />,
+  "row-model": () => <RowModel />,
+  rendering: () => <Rendering />,
+  "custom-field-types": () => <CustomFieldTypes />,
+  localization: () => <Localization />,
+};
+
+/** Routes that predate the one-section-per-guide layout. */
+const legacyRoutes: Record<string, GuideSlug> = {
+  visibility: "rules",
+  "server-errors": "validation",
+};
 
 function useHashRoute(): string {
   return useSyncExternalStore(
@@ -50,36 +44,72 @@ function useHashRoute(): string {
 
 export function App() {
   const route = useHashRoute();
-  const page = pages.find((p) => p.slug === route) ?? pages[0];
+  const [menuOpen, setMenuOpen] = useState(false);
+  const resolved = legacyRoutes[route] ?? route;
+  const active = guides.find((entry) => entry.slug === resolved) ?? guides[0];
+  const closeMenu = () => setMenuOpen(false);
 
   return (
     <div className="app">
-      <nav className="nav" aria-label="Examples">
-        <a className="nav__brand" href="#/quickstart">
-          react-form-engine
-          <span className="nav__sub">live examples</span>
-        </a>
-        <ul className="nav__list">
-          {pages.map((p) => (
-            <li key={p.slug}>
-              <a
-                href={`#/${p.slug}`}
-                aria-current={p.slug === page.slug ? "page" : undefined}
-              >
-                {p.label}
-              </a>
-            </li>
-          ))}
-        </ul>
-        <a
-          className="nav__footer"
-          href="https://github.com/xKirtle/react-form-engine"
-        >
-          GitHub ↗
-        </a>
+      <nav
+        className={menuOpen ? "nav nav--open" : "nav"}
+        aria-label="Guides"
+      >
+        <div className="nav__bar">
+          <a className="nav__brand" href="#/quickstart" onClick={closeMenu}>
+            react-form-engine
+            <span className="nav__sub">live examples, one per guide</span>
+          </a>
+          <button
+            type="button"
+            className="nav__toggle"
+            aria-expanded={menuOpen}
+            aria-controls="nav-menu"
+            onClick={() => setMenuOpen((open) => !open)}
+          >
+            <svg
+              aria-hidden="true"
+              width="18"
+              height="18"
+              viewBox="0 0 18 18"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+            >
+              {menuOpen ? (
+                <path d="M3 3l12 12M15 3L3 15" />
+              ) : (
+                <path d="M2 4.5h14M2 9h14M2 13.5h14" />
+              )}
+            </svg>
+            Menu
+          </button>
+        </div>
+        <div className="nav__menu" id="nav-menu">
+          <ol className="nav__list">
+            {guides.map((entry) => (
+              <li key={entry.slug}>
+                <a
+                  href={`#/${entry.slug}`}
+                  aria-current={entry.slug === active.slug ? "page" : undefined}
+                  onClick={closeMenu}
+                >
+                  <span className="nav__num" aria-hidden="true">
+                    {entry.num}
+                  </span>
+                  {entry.title}
+                </a>
+              </li>
+            ))}
+          </ol>
+          <div className="nav__footer">
+            <a href={DOCS_URL}>Docs ↗</a>
+            <a href="https://github.com/xKirtle/react-form-engine">GitHub ↗</a>
+          </div>
+        </div>
       </nav>
-      <main className="content" key={page.slug}>
-        {page.render()}
+      <main className="content" key={active.slug}>
+        {pages[active.slug]()}
       </main>
     </div>
   );
