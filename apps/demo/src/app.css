@@ -330,7 +330,7 @@ body {
   color: var(--muted);
 }
 
-/* ── rule anatomy (one deliberate code block) ──────────────────────── */
+/* ── code shapes (the Code component; tokens themed in Code.tsx) ───── */
 .anatomy {
   margin: 0;
   background: var(--panel);
@@ -343,21 +343,10 @@ body {
   line-height: 1.6;
 }
 
-.anatomy__comment {
-  color: var(--muted);
-}
-
-/* syntax tokens reuse the existing state hues — no new colors */
-.anatomy__kw {
-  color: var(--state-api);
-}
-
-.anatomy__str {
-  color: var(--state-seeded);
-}
-
-.anatomy__fn {
-  color: var(--state-user);
+/* a code shape above a live example: inset on panels */
+.panel .anatomy {
+  background: var(--paper);
+  margin-bottom: 1.25rem;
 }
 
 /* ── schema peek ───────────────────────────────────────────────────── */
@@ -689,6 +678,10 @@ body {
   gap: 1.5rem;
 }
 
+.anatomy + .split {
+  margin-top: 1rem;
+}
+
 .split__pane {
   background: var(--panel);
   border: 1px solid var(--line);
@@ -764,6 +757,7 @@ body {
 }
 
 .plain-field input[type="text"],
+.plain-field textarea,
 .plain-field select {
   font: inherit;
   width: 100%;
@@ -776,10 +770,15 @@ body {
 }
 
 .plain-field input[type="text"]:focus-visible,
+.plain-field textarea:focus-visible,
 .plain-field select:focus-visible {
   outline: none;
   border-bottom: 2px solid var(--state-api);
   margin-bottom: -1px;
+}
+
+.plain-field textarea {
+  resize: vertical;
 }
 
 .plain-field--checkbox {
@@ -794,6 +793,40 @@ body {
   color: var(--error);
   font-size: 0.8125rem;
   margin-top: 0.25rem;
+}
+
+/* ── rendering page: placement slots & the bespoke field ───────────── */
+.slot {
+  border: 1px dashed var(--line-strong);
+  border-radius: 6px;
+  padding: 0.875rem 1rem 0.125rem;
+}
+
+.slot + .slot {
+  margin-top: 0.875rem;
+}
+
+.slot__tag {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  color: var(--muted);
+  margin-bottom: 0.625rem;
+}
+
+.bespoke-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.75rem;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-top: 0.375rem;
+}
+
+.bespoke-meta__over {
+  color: var(--error);
 }
 
 /* ── custom field types page: the rating renderer ──────────────────── */
@@ -823,6 +856,10 @@ body {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.5rem;
   margin-bottom: 2rem;
+}
+
+.exhibit + .gallery {
+  margin-top: 2rem;
 }
 
 .gallery .exhibit {

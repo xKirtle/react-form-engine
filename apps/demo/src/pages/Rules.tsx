@@ -8,6 +8,7 @@ import {
 } from "@react-form-engine/core";
 import { htmlRenderers } from "@react-form-engine/renderers-html";
 import { type ReactNode, useRef, useState } from "react";
+import { Code } from "../components/Code";
 import {
   FieldStateTable,
   StateBadges,
@@ -49,67 +50,17 @@ function EnginePeek<TApi, TContext, TFields extends FieldMap<TApi>>(props: {
   );
 }
 
-/** Just enough TypeScript tokenizing for the one code block below. */
-function highlightTs(code: string): ReactNode[] {
-  const out: ReactNode[] = [];
-  const token = /("(?:[^"\\]|\\.)*")|\b(const|true|false)\b|([\w$]+)(?=\()/g;
-  let last = 0;
-  for (let match = token.exec(code); match !== null; match = token.exec(code)) {
-    if (match.index > last) {
-      out.push(code.slice(last, match.index));
-    }
-    const cls =
-      match[1] !== undefined
-        ? "anatomy__str"
-        : match[2] !== undefined
-          ? "anatomy__kw"
-          : "anatomy__fn";
-    out.push(
-      <span key={match.index} className={cls}>
-        {match[0]}
-      </span>,
-    );
-    last = match.index + match[0].length;
-  }
-  if (last < code.length) {
-    out.push(code.slice(last));
-  }
-  return out;
-}
-
-/**
- * The one deliberate code block in the demo: the page is about a shape,
- * so the shape is shown — the exact rule running in the first example.
- */
-function RuleAnatomy() {
-  return (
-    <pre className="anatomy">
-      <code>
-        {highlightTs(
-          'const financialVisibility = bc.rule({\n  watch: ["funded"],                  ',
-        )}
-        <span className="anatomy__comment">
-          {"// the fields this rule reacts to"}
-        </span>
-        {highlightTs("\n  when: (funded) => funded,           ")}
-        <span className="anatomy__comment">
-          {"// watched values, typed positionally"}
-        </span>
-        {highlightTs("\n  apply: (form) => {                  ")}
-        <span className="anatomy__comment">
-          {"// runs on each watched change while true"}
-        </span>
-        {highlightTs('\n    form.setVisible("budget", true);  ')}
-        <span className="anatomy__comment">{"// + forecast, costCenter"}</span>
-        {highlightTs("\n  },\n  otherwise: (form) => {              ")}
-        <span className="anatomy__comment">
-          {"// runs once, on the transition to false"}
-        </span>
-        {highlightTs('\n    form.setVisible("budget", false);\n  },\n});')}
-      </code>
-    </pre>
-  );
-}
+/** The shape the page is about — the exact rule in the first example. */
+const ruleAnatomy = `const financialVisibility = bc.rule({
+  watch: ["funded"],                  // the fields this rule reacts to
+  when: (funded) => funded,           // watched values, typed positionally
+  apply: (form) => {                  // runs on each watched change while true
+    form.setVisible("budget", true);  // + forecast, costCenter
+  },
+  otherwise: (form) => {              // runs once, on the transition to false
+    form.setVisible("budget", false);
+  },
+});`;
 
 /* ── 1. a visibility rule, and the whenHidden policies ─────────────── */
 
@@ -385,7 +336,7 @@ export function Rules() {
         }
         bare
       >
-        <RuleAnatomy />
+        <Code>{ruleAnatomy}</Code>
       </Exhibit>
 
       <Exhibit
