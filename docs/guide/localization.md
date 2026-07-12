@@ -1,5 +1,7 @@
 # Localization
 
+_Every concept on this page runs live in [the demo](https://xkirtle.github.io/react-form-engine/demo/#/localization)._
+
 Every string the engine generates — validation messages, list mechanics,
 the accessible names on row buttons — routes through one `EngineMessages`
 object. Nothing is hardcoded past it, so localizing a form means providing

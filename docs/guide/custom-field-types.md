@@ -1,5 +1,7 @@
 # Custom field types
 
+_Every concept on this page runs live in [the demo](https://xkirtle.github.io/react-form-engine/demo/#/custom-field-types)._
+
 The built-in types cover the common ground; anything else you register
 yourself, and a registered type is a first-class citizen — key binding
 checked against the API model, a validation vocabulary, transform

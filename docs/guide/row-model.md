@@ -1,5 +1,7 @@
 # The row model
 
+_Every concept on this page runs live in [the demo](https://xkirtle.github.io/react-form-engine/demo/#/row-model)._
+
 Editable lists are where form state usually falls apart. Arrays force
 index-based React keys that shuffle on removal; "this row can't be
 deleted" ends up in a second data structure that drifts out of sync; and

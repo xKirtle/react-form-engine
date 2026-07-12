@@ -1,5 +1,7 @@
 # Field definitions
 
+_Every concept on this page runs live in [the demo](https://xkirtle.github.io/react-form-engine/demo/#/field-definitions)._
+
 A form starts as a *field map*: plain TypeScript data describing every
 field the form can have. No JSX, no registration calls — an object you can
 export, share between forms, and test like any other value.

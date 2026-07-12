@@ -1,5 +1,7 @@
 # Quickstart
 
+_Prefer seeing it run? [The live demo](https://xkirtle.github.io/react-form-engine/demo/) pairs every guide with running examples._
+
 A working form in four steps: define fields as data, compose them into a
 module, hand everything to the engine, render.
 

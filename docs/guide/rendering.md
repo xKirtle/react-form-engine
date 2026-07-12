@@ -1,5 +1,7 @@
 # Rendering
 
+_Every concept on this page runs live in [the demo](https://xkirtle.github.io/react-form-engine/demo/#/rendering)._
+
 The core renders nothing. It computes everything a field's UI needs —
 value, label, gated error, options, required — and hands it to a
 *renderer*: a component you map to each field type. The included

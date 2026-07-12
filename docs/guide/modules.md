@@ -1,5 +1,7 @@
 # Modules & context
 
+_Every concept on this page runs live in [the demo](https://xkirtle.github.io/react-form-engine/demo/#/modules)._
+
 A [field map](./field-definitions) is a vocabulary; a module is a sentence
 built from it. Each module selects fields by name and can bring overrides,
 [rules](./rules), and defaults along. A form is a list of modules, and

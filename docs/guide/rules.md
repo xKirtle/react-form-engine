@@ -1,5 +1,7 @@
 # Rules & the engine API
 
+_Every concept on this page runs live in [the demo](https://xkirtle.github.io/react-form-engine/demo/#/rules)._
+
 Dynamic behavior climbs a ladder, and you only climb as high as a
 requirement forces:
 
