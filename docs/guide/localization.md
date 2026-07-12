@@ -5,6 +5,12 @@ the accessible names on row buttons — routes through one `EngineMessages`
 object. Nothing is hardcoded past it, so localizing a form means providing
 one object, not hunting strings.
 
+The dividing line is authorship: **the engine translates what it authors;
+what you author, you translate.** A default `required` message exists in
+no file you own, so it must have an override channel — that channel is
+`messages`. Your labels, descriptions, and per-field messages already live
+in your codebase, so they never need one.
+
 ```ts
 import type { EngineMessagesOverride } from "@react-form-engine/core";
 
@@ -54,20 +60,25 @@ A message is resolved most-specific-first:
 2. **The form's `messages` option** — the locale override above.
 3. **English defaults.**
 
-Per-field messages sit *above* the locale, which cuts both ways: they're
-the right place for wording that is genuinely field-specific, and the
-wrong place for anything a locale switch should reach. If your app is
+Per-field messages sit *above* the locale — authorship again: a
+hand-written `message` is your string, and the engine never rewrites
+yours. That cuts both ways: they're the right place for wording that is
+genuinely field-specific, and the wrong place for anything a locale
+switch should reach. If your app is
 multilingual, prefer the vocabulary's default messages (localized once, in
 `messages`) and reserve per-field `message` for text you localize at the
 definition site.
 
 ## Field labels are yours
 
-`label` and `description` are your content, not engine output — the engine
-passes them through untouched. Localize them the way you localize any app
-copy: define maps per locale, or run your i18n library's translate over
-them as you build the map. The engine only insists on one thing: whatever
-you hand it is what renders.
+`label` and `description` are your content, not engine output — the
+authorship rule again. You wrote these strings, so you can already
+translate them, and a second channel through the engine would only
+compete with the i18n setup you have. Localize them the way you localize
+any app copy: define maps per locale, or run your i18n library's
+translate over them as you build the map — `label: t("project.name")`
+composes naturally, because pass-through is the whole contract. The
+engine only insists on one thing: whatever you hand it is what renders.
 
 ## Switching locale at runtime
 
