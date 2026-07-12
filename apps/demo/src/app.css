@@ -829,6 +829,21 @@ body {
   color: var(--error);
 }
 
+/* ── custom field types page: the permission list renderer ─────────── */
+.perm-row {
+  align-items: center;
+}
+
+.perm-flag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
 /* ── custom field types page: the rating renderer ──────────────────── */
 .rating {
   display: flex;
