@@ -3,56 +3,153 @@ import {
   Form,
   FormRenderers,
   formBuilder,
+  type UseFormEngineReturn,
   useFormEngine,
 } from "@react-form-engine/core";
 import { htmlRenderers } from "@react-form-engine/renderers-html";
-import { useRef, useState } from "react";
-import { EngineReadout } from "../components/EngineReadout";
+import { type ReactNode, useRef, useState } from "react";
+import {
+  FieldStateTable,
+  StateBadges,
+  useEngineTick,
+} from "../components/EngineReadout";
 import { Exhibit, PageShell } from "../components/PageShell";
 import { guide } from "../guides";
 
-interface Project {
+/**
+ * The engine data one exhibit changes: the state lights, optionally the
+ * per-field flags, and the payload serialize() would produce right now.
+ */
+function EnginePeek<TApi, TContext, TFields extends FieldMap<TApi>>(props: {
+  bundle: UseFormEngineReturn<TApi, TContext, TFields>;
+  hint: ReactNode;
+  fieldState?: boolean;
+  serializeHint?: ReactNode;
+}) {
+  useEngineTick(props.bundle);
+  return (
+    <aside className="readout readout--inline" aria-label="Engine data">
+      <div className="readout__title">engine data</div>
+      <p className="readout__hint">{props.hint}</p>
+      <StateBadges bundle={props.bundle} />
+      {props.fieldState === true && (
+        <>
+          <div className="readout__label">field state</div>
+          <FieldStateTable bundle={props.bundle} />
+        </>
+      )}
+      <div className="readout__label">serialize()</div>
+      {props.serializeHint !== undefined && (
+        <p className="readout__hint">{props.serializeHint}</p>
+      )}
+      <pre className="readout__json">
+        {JSON.stringify(props.bundle.serialize(), null, 2)}
+      </pre>
+    </aside>
+  );
+}
+
+/** Just enough TypeScript tokenizing for the one code block below. */
+function highlightTs(code: string): ReactNode[] {
+  const out: ReactNode[] = [];
+  const token = /("(?:[^"\\]|\\.)*")|\b(const|true|false)\b|([\w$]+)(?=\()/g;
+  let last = 0;
+  for (let match = token.exec(code); match !== null; match = token.exec(code)) {
+    if (match.index > last) {
+      out.push(code.slice(last, match.index));
+    }
+    const cls =
+      match[1] !== undefined
+        ? "anatomy__str"
+        : match[2] !== undefined
+          ? "anatomy__kw"
+          : "anatomy__fn";
+    out.push(
+      <span key={match.index} className={cls}>
+        {match[0]}
+      </span>,
+    );
+    last = match.index + match[0].length;
+  }
+  if (last < code.length) {
+    out.push(code.slice(last));
+  }
+  return out;
+}
+
+/**
+ * The one deliberate code block in the demo: the page is about a shape,
+ * so the shape is shown — the exact rule running in the first example.
+ */
+function RuleAnatomy() {
+  return (
+    <pre className="anatomy">
+      <code>
+        {highlightTs(
+          'const financialVisibility = bc.rule({\n  watch: ["funded"],                  ',
+        )}
+        <span className="anatomy__comment">
+          {"// the fields this rule reacts to"}
+        </span>
+        {highlightTs("\n  when: (funded) => funded,           ")}
+        <span className="anatomy__comment">
+          {"// watched values, typed positionally"}
+        </span>
+        {highlightTs("\n  apply: (form) => {                  ")}
+        <span className="anatomy__comment">
+          {"// runs on each watched change while true"}
+        </span>
+        {highlightTs('\n    form.setVisible("budget", true);  ')}
+        <span className="anatomy__comment">{"// + forecast, costCenter"}</span>
+        {highlightTs("\n  },\n  otherwise: (form) => {              ")}
+        <span className="anatomy__comment">
+          {"// runs once, on the transition to false"}
+        </span>
+        {highlightTs('\n    form.setVisible("budget", false);\n  },\n});')}
+      </code>
+    </pre>
+  );
+}
+
+/* ── 1. a visibility rule, and the whenHidden policies ─────────────── */
+
+interface Financials {
   funded: boolean;
   budget: number;
   forecast: number;
   costCenter: string;
-  assignee: string;
 }
 
-const fields = {
+const financeFields = {
   funded: { key: "funded", type: "checkbox", label: "Funded project" },
   budget: {
     key: "budget",
     type: "number",
     label: "Budget",
-    description: "whenHidden: omit (default) — the key disappears",
+    description: 'whenHidden: "omit" (default) — the key disappears',
     validation: { required: true },
   },
   forecast: {
     key: "forecast",
     type: "number",
     label: "Forecast",
-    description: "whenHidden: null — the backend sees an explicit null",
+    description: 'whenHidden: "null" — the backend sees an explicit null',
     whenHidden: "null",
   },
   costCenter: {
     key: "costCenter",
     type: "text",
     label: "Cost center",
-    description: "whenHidden: keep — hidden, but still submitted",
+    description: 'whenHidden: "keep" — hidden, but still submitted',
     whenHidden: "keep",
   },
-  assignee: {
-    key: "assignee",
-    type: "select",
-    label: "Assignee",
-    description: "Options arrive via engine.setOptions",
-  },
-} as const satisfies FieldMap<Project>;
+} as const satisfies FieldMap<Financials>;
 
-const bc = formBuilder<Project>().withFields(fields).withContext<undefined>();
+const fb = formBuilder<Financials>()
+  .withFields(financeFields)
+  .withContext<undefined>();
 
-const financialVisibility = bc.rule({
+const financialVisibility = fb.rule({
   watch: ["funded"],
   when: (funded) => funded,
   apply: (form) => {
@@ -67,38 +164,143 @@ const financialVisibility = bc.rule({
   },
 });
 
-const modules = [
-  bc.module({
-    fields: ["funded", "budget", "forecast", "costCenter", "assignee"],
+const financeModules = [
+  fb.module({
+    fields: ["funded", "budget", "forecast", "costCenter"],
     rules: [financialVisibility],
   }),
 ];
 
-const schemaPeek = `budget:     { key: "budget",     type: "number" },                    // whenHidden defaults to "omit"
-forecast:   { key: "forecast",   type: "number", whenHidden: "null" },
-costCenter: { key: "costCenter", type: "text",   whenHidden: "keep" },
+function VisibilityExample() {
+  const bundle = useFormEngine<Financials, undefined, typeof financeFields>({
+    fields: financeFields,
+    modules: financeModules,
+    context: undefined,
+    initialErrors: "eager",
+    initialValues: { budget: 25000, forecast: 12000, costCenter: "CC-7" },
+  });
+  return (
+    <div className="split">
+      <div className="split__pane">
+        <FormRenderers renderers={htmlRenderers}>
+          <Form form={bundle}>
+            <Form.AutoFields />
+          </Form>
+        </FormRenderers>
+      </div>
+      <EnginePeek
+        bundle={bundle}
+        hint="Visibility is engine state, not conditional rendering — the
+          field state and the payload both react to it."
+        fieldState
+        serializeHint="One hidden flag, three payload policies: budget's key
+          is gone, forecast is an explicit null, costCenter kept its value."
+      />
+    </div>
+  );
+}
 
-// rung 1: a rule — reacts to form values, runs inside the engine
-const financialVisibility = bc.rule({
-  watch: ["funded"],
-  when: (funded) => funded,
-  apply: (form) => { /* setVisible(..., true) */ },
-  otherwise: (form) => { /* setVisible(..., false) */ },
+/* ── 2. a derivation rule: writes that never dirty ─────────────────── */
+
+interface Order {
+  quantity: number;
+  unitPrice: number;
+  total: number;
+}
+
+const orderFields = {
+  quantity: { key: "quantity", type: "number", label: "Quantity" },
+  unitPrice: { key: "unitPrice", type: "number", label: "Unit price" },
+  total: {
+    key: "total",
+    type: "number",
+    label: "Total",
+    description: "written by a rule — quantity × unit price",
+  },
+} as const satisfies FieldMap<Order>;
+
+const ob = formBuilder<Order>()
+  .withFields(orderFields)
+  .withContext<undefined>();
+
+const totalDerivation = ob.rule({
+  watch: ["quantity", "unitPrice"],
+  apply: (form) => {
+    const quantity = form.getValue("quantity");
+    const unitPrice = form.getValue("unitPrice");
+    form.setValue(
+      "total",
+      (typeof quantity === "number" ? quantity : 0) *
+        (typeof unitPrice === "number" ? unitPrice : 0),
+    );
+  },
 });
 
-// rung 2: the engine API — reacts to the app, called from page code
-bundle.engine.setOptions("assignee", usersFromRequest);
-bundle.engine.setValue("budget", 50000);`;
+const orderModules = [
+  ob.module({
+    fields: ["quantity", "unitPrice", "total"],
+    rules: [totalDerivation],
+  }),
+];
 
-export function Rules() {
-  const [loading, setLoading] = useState(false);
-  const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
-  const bundle = useFormEngine<Project, undefined, typeof fields>({
-    fields,
-    modules,
+function DerivationExample() {
+  const bundle = useFormEngine<Order, undefined, typeof orderFields>({
+    fields: orderFields,
+    modules: orderModules,
     context: undefined,
     initialErrors: "gated",
-    initialValues: { budget: 25000, forecast: 12000, costCenter: "CC-7" },
+    initialValues: { quantity: 3, unitPrice: 40 },
+  });
+  return (
+    <div className="split">
+      <div className="split__pane">
+        <FormRenderers renderers={htmlRenderers}>
+          <Form form={bundle}>
+            <Form.AutoFields />
+          </Form>
+        </FormRenderers>
+        <div className="actions">
+          <button type="button" className="btn" onClick={() => bundle.reset()}>
+            Reset
+          </button>
+        </div>
+      </div>
+      <EnginePeek
+        bundle={bundle}
+        hint="The pristine light is the point: the rule wrote total before
+          first paint, and it's still off."
+        serializeHint="The derived total ships like any other value."
+      />
+    </div>
+  );
+}
+
+/* ── 3. rung 2: the engine API from page code ──────────────────────── */
+
+interface Assignment {
+  assignee: string;
+  budget: number;
+}
+
+const rungTwoFields = {
+  assignee: {
+    key: "assignee",
+    type: "select",
+    label: "Assignee",
+    description: "options arrive via engine.setOptions",
+  },
+  budget: { key: "budget", type: "number", label: "Budget" },
+} as const satisfies FieldMap<Assignment>;
+
+function RungTwoExample() {
+  const [loading, setLoading] = useState(false);
+  const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const bundle = useFormEngine<Assignment, undefined, typeof rungTwoFields>({
+    fields: rungTwoFields,
+    modules: [{ fields: ["assignee", "budget"] }],
+    context: undefined,
+    initialErrors: "gated",
+    initialValues: { budget: 25000 },
   });
 
   const loadAssignees = () => {
@@ -116,59 +318,11 @@ export function Rules() {
   };
 
   return (
-    <PageShell
-      guide={guide("rules")}
-      title="Rung 1 reacts to values, rung 2 to the app"
-      lede={
-        <>
-          A rule hides the three financial fields while the project is unfunded
-          — each with a different <code>whenHidden</code> policy, so the same
-          hidden flag leaves three different payloads. Below it, the same engine
-          surface is called from page code: options arriving from a request, an
-          imperative write.
-        </>
-      }
-      tries={[
-        "The form loaded unfunded: all three financial fields are hidden (see field state), yet serialize() shows three outcomes — budget's key is gone, forecast is null, costCenter kept its value.",
-        "Check Funded — the fields return with their parsed values intact. Hidden never meant cleared, and the rule ran on the initial pass too.",
-        "While hidden, budget shows no invalid flag despite being required — hidden fields are excluded from validation entirely.",
-        "Press Load assignees, then open the select: the options arrived through engine.setOptions, and the form is still pristine — options aren't values.",
-        "Press Import budget: the same setValue a rule could make, but from page code it's the user channel — watch the dirty light come on.",
-      ]}
-      schema={schemaPeek}
-      readout={<EngineReadout bundle={bundle} />}
-    >
-      <Exhibit
-        title="Rung 1 — a visibility rule"
-        note={
-          <>
-            The rule watches <code>funded</code>; its <code>setVisible</code>{" "}
-            writes are derived state and never dirty the form.
-          </>
-        }
-      >
+    <div className="split">
+      <div className="split__pane">
         <FormRenderers renderers={htmlRenderers}>
           <Form form={bundle}>
-            <Form.Field name="funded" />
-            <Form.Field name="budget" />
-            <Form.Field name="forecast" />
-            <Form.Field name="costCenter" />
-          </Form>
-        </FormRenderers>
-      </Exhibit>
-
-      <Exhibit
-        title="Rung 2 — the engine API from page code"
-        note={
-          <>
-            Identical calls, different channel: page-code writes dirty the form,
-            rule writes never do.
-          </>
-        }
-      >
-        <FormRenderers renderers={htmlRenderers}>
-          <Form form={bundle}>
-            <Form.Field name="assignee" />
+            <Form.AutoFields />
           </Form>
         </FormRenderers>
         <div className="actions">
@@ -187,7 +341,102 @@ export function Rules() {
           >
             Import budget (setValue)
           </button>
+          <button type="button" className="btn" onClick={() => bundle.reset()}>
+            Reset
+          </button>
         </div>
+      </div>
+      <EnginePeek
+        bundle={bundle}
+        hint="Watch the dirty light: options landing leave it off; a
+          page-code setValue turns it on."
+        serializeHint="Options never appear here — they're state, not values."
+      />
+    </div>
+  );
+}
+
+/* ── the page ───────────────────────────────────────────────────────── */
+
+export function Rules() {
+  return (
+    <PageShell
+      guide={guide("rules")}
+      title="Rung 1 reacts to values, rung 2 to the app"
+      lede="Dynamic behavior climbs a ladder, and you climb only as high as
+        a requirement forces: schema data that doesn't move, then rules —
+        declarative watchers that run inside the engine — then imperative
+        engine calls from page code. The differences that matter here (what
+        serializes, what counts as dirty) live in engine data, so each
+        example is paired with it."
+      wide
+    >
+      <Exhibit
+        title="Anatomy of a rule"
+        note={
+          <>
+            A rule is a declarative watcher with typed code inside, made through
+            the form builder so everything infers from <code>watch</code> — no
+            condition language to learn, <code>when</code> is a function. This
+            is the exact rule running in the next example; it attaches to the
+            form through a module, so a slice of fields travels with its
+            behavior.
+          </>
+        }
+        bare
+      >
+        <RuleAnatomy />
+      </Exhibit>
+
+      <Exhibit
+        title="A rule owns visibility"
+        note={
+          <>
+            The rule above, live — and it already ran on the initial, unfunded
+            pass. Hiding is not clearing (check Funded: nothing was lost),
+            hidden fields are excluded from validation (budget is required, yet
+            the invalid light is off), and each field's <code>whenHidden</code>{" "}
+            policy decides what the payload gets.
+          </>
+        }
+        bare
+      >
+        <VisibilityExample />
+      </Exhibit>
+
+      <Exhibit
+        title="Derived values — rule writes never dirty the form"
+        note={
+          <>
+            No <code>when</code>, so <code>apply</code> reruns on every watched
+            change, recomputing the total. It ran before first paint too — yet
+            the form is pristine, because rule writes are derived state:
+            recomputable from inputs, so losing them loses nothing, and an
+            unsaved-changes warning here would cry wolf. Edit a quantity and the
+            dirty light comes on — from your edit, not the rule's write.
+          </>
+        }
+        bare
+      >
+        <DerivationExample />
+      </Exhibit>
+
+      <Exhibit
+        title="Rung 2 — the same calls, made from page code"
+        note={
+          <>
+            The surface rules receive is also on <code>bundle.engine</code>, for
+            behavior that reacts to the app rather than to form values. One
+            difference: page-code writes are the <em>user channel</em>. Load the
+            options and the form stays pristine — options aren't values. Import
+            the budget — the identical <code>setValue</code> a rule could make —
+            and it dirties the form. You don't choose the channel; it follows
+            from where the call is made, so provenance can't lie.
+          </>
+        }
+        bare
+      >
+        <RungTwoExample />
       </Exhibit>
     </PageShell>
   );

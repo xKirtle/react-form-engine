@@ -330,6 +330,36 @@ body {
   color: var(--muted);
 }
 
+/* ── rule anatomy (one deliberate code block) ──────────────────────── */
+.anatomy {
+  margin: 0;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  line-height: 1.6;
+}
+
+.anatomy__comment {
+  color: var(--muted);
+}
+
+/* syntax tokens reuse the existing state hues — no new colors */
+.anatomy__kw {
+  color: var(--state-api);
+}
+
+.anatomy__str {
+  color: var(--state-seeded);
+}
+
+.anatomy__fn {
+  color: var(--state-user);
+}
+
 /* ── schema peek ───────────────────────────────────────────────────── */
 .schema-peek {
   margin-top: 2rem;

@@ -11,7 +11,9 @@ function adapt(store: { subscribe: (listener: () => void) => unknown }) {
 }
 
 /** Re-renders on every notification from a store, whatever it carries. */
-function useStoreTick(subscribe: (listener: () => void) => () => void): void {
+export function useStoreTick(
+  subscribe: (listener: () => void) => () => void,
+): void {
   const tick = useRef(0);
   useSyncExternalStore(
     useMemo(
@@ -24,6 +26,20 @@ function useStoreTick(subscribe: (listener: () => void) => () => void): void {
     ),
     () => tick.current,
   );
+}
+
+/**
+ * Re-renders on any engine change an exhibit can cause: values,
+ * validation, visibility. For panels that read engine data directly.
+ */
+export function useEngineTick<TApi, TContext, TFields extends FieldMap<TApi>>(
+  bundle: UseFormEngineReturn<TApi, TContext, TFields>,
+): void {
+  useStoreTick(
+    useMemo(() => adapt(bundle.internals.form.store), [bundle.internals]),
+  );
+  useStoreTick(bundle.validation.subscribe);
+  useStoreTick(bundle.visibility.subscribe);
 }
 
 export function StateBadges<
@@ -59,7 +75,7 @@ export function StateBadges<
  * Per-field engine metadata: the touch gate, visibility, server errors,
  * and the raw-vs-shown validation distinction, one row per resolved field.
  */
-function FieldStateTable<
+export function FieldStateTable<
   TApi,
   TContext,
   TFields extends FieldMap<TApi>,
